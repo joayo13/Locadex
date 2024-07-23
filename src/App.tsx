@@ -1,8 +1,9 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import GoogleMap from './GoogleMap';
 
-function App() {
+const App: React.FC = () => {
   return (
     <div className="App">
       <header className="App-header">
@@ -10,6 +11,7 @@ function App() {
         <p>
           Ventura
         </p>
+        <GoogleMap/>
 
 <label htmlFor="picture">Take a picture using back facing camera:</label>
 
