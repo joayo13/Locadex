@@ -17,7 +17,7 @@ const ImageUploader: React.FC = () => {
   return (
     <div>
     <label htmlFor="picture">Take a picture using back facing camera:</label>
-      <input id="picture" name="picture" type="file" accept="image/*" onChange={handleImageUpload} />
+      <input id="picture" name="picture" type="file" accept="image/*" capture="environment" onChange={handleImageUpload} />
       {imageSrc && <img src={imageSrc} alt="Selected" style={{ maxWidth: '100%', height: 'auto' }} />}
     </div>
   );
