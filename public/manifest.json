@@ -18,6 +18,19 @@
       "sizes": "512x512"
     }
   ],
+  "screenshots": [
+    {
+      "src": "spoop.jpeg",
+      "sizes": "835x835",
+      "type": "image/jpeg",
+      "form_factor": "wide"
+    },
+    {
+      "src": "spoop.jpeg",
+      "sizes": "835x835",
+      "type": "image/jpeg"
+    }
+  ],
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
