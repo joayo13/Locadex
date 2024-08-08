@@ -1,13 +1,39 @@
 
+    let map: google.maps.Map;
+    
     const initMap = (lat: number, lng: number) => {
         const center = new google.maps.LatLng(lat, lng);
-
-        const map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
+        map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
             center: center,
             zoom: 15,
             mapId: '88c0dfbb3ce2d741',
         });
+        //Initialize user position on map, set marker in updateUserPosition
+        navigator.geolocation.watchPosition(updateUserPosition, error, options)
+    };
+    const error = (err: GeolocationPositionError) => {
+        console.error(`ERROR(${err.code}): ${err.message}`);
+    }
+    const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0,
+      };
 
+    const updateUserPosition = (pos: GeolocationPosition ) => {
+        let coords = new google.maps.LatLng({
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude
+        })
+        new google.maps.marker.AdvancedMarkerElement({
+            position: coords,
+            map: map,
+            title: "me"
+        })
+    }
+
+    const placePointer = (lat: number, lng: number) => {
+        const center = new google.maps.LatLng(lat, lng);
         const service = new google.maps.places.PlacesService(map);
 
         const request: google.maps.places.PlaceSearchRequest = {
@@ -32,6 +58,6 @@
                 console.log('No places found');
             }
         });
-    };
+    }
 
     export default initMap
