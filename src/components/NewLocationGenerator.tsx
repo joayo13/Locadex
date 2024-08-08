@@ -1,6 +1,6 @@
 import React from 'react';
 import '../App.css';
-import initMap from '../services/google';
+import {initMap} from '../services/google';
 import getLocation from '../services/geolocation';
 const NewLocationGenerator: React.FC = () => {
   async function nextVentura() {
@@ -17,7 +17,7 @@ const NewLocationGenerator: React.FC = () => {
   }
   return (
     <div style={{ height: '20rem', width: '100%' }}>
-<button onClick={() => nextVentura()}>get new location</button>
+<button onClick={() => nextVentura()}>initMap</button>
 <div id="map" style={{ height: '500px', width: '100%' }}></div>
     </div>
   );
