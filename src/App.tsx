@@ -16,7 +16,6 @@ import {app} from'./services/firebase'
 //   return 2 * r * Math.asin(Math.sqrt(a));
 // }
 const App: React.FC = () => {
-  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
   return (
     <div className="App">
       <header className="App-header">
@@ -26,8 +25,6 @@ const App: React.FC = () => {
         </p>
 <ImageUploader/>
 <NewLocationGenerator/>
-<button onClick={() => signInWithGoogle()}>Google sign in</button>
-<button onClick={() => console.log(user)}>Is there a user</button>
       </header>
     </div>
   );
