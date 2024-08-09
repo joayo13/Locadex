@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import logo from './logo.svg';
 import './App.css';
 import ImageUploader from './components/ImageUploader';
 import NewLocationGenerator from './components/NewLocationGenerator';
-import {app} from'./services/firebase'
 //TODO: Implement this haversine equation for checking distance between lat longs 
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
