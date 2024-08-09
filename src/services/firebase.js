@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,18 +20,21 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
-signInWithPopup(auth, provider)
+signInWithRedirect(auth, provider);
+getRedirectResult(auth)
   .then((result) => {
-    console.log('fuck yeah')
-    // This gives you a Google Access Token. You can use it to access the Google API.
+    
+    // This gives you a Google Access Token. You can use it to access Google APIs.
     const credential = GoogleAuthProvider.credentialFromResult(result);
     const token = credential.accessToken;
+
     // The signed-in user info.
     const user = result.user;
+    console.log(user, token)
     // IdP data available using getAdditionalUserInfo(result)
     // ...
   }).catch((error) => {
-    console.log(error)
+    
     // Handle Errors here.
     const errorCode = error.code;
     const errorMessage = error.message;
@@ -39,6 +42,7 @@ signInWithPopup(auth, provider)
     const email = error.customData.email;
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
+    console.log(errorCode, errorMessage, email, credential);
     // ...
   });
 
