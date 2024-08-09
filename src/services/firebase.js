@@ -20,54 +20,29 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const provider = new GoogleAuthProvider();
+signInWithRedirect(auth, provider);
+getRedirectResult(auth)
+  .then((result) => {
+    
+    // This gives you a Google Access Token. You can use it to access Google APIs.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
 
-const googleSignIn = async () => {
-  try {
-    await signInWithRedirect(auth, provider);
-  }
-  catch(error) {
-    console.log(error.code, error.message)
-  }
-  
-}
-// const debugGoogleRedirectResult = async () => {
-//   try {
-//     const result = await getRedirectResult(auth)
-//     if(result) {
-//       const credential = GoogleAuthProvider.credentialFromResult(result);
-//       const token = credential.accessToken;
-//       // The signed-in user info.
-//       const user = result.user;
-//       console.log(user, token)
-//       // IdP data available using getAdditionalUserInfo(result)
-//       // ...
-//     }
-//     else {
-//       console.log('what')
-//     }
-//   }
-//   catch(error) {
-//     const errorCode = error.code;
-//     const errorMessage = error.message;
-//     // The email of the user's account used.
-//     // The AuthCredential type that was used.
-//     const credential = GoogleAuthProvider.credentialFromError(error);
-//     console.log(errorCode, errorMessage, credential);
-//   }
-// }
-// onAuthStateChanged(auth, async (user) => {
-//   if (user) {
-//       const result = await getRedirectResult(auth);
-//       if (result) {
-//         const credential = GoogleAuthProvider.credentialFromResult(result);
-//         const token = credential.accessToken;
-//         // The signed-in user info.
-//         const user = result.user;
-//         console.log(user, token)
-//         // IdP data available using getAdditionalUserInfo(result)
-//         // ...
-//       }
-//   }
-// });
+    // The signed-in user info.
+    const user = result.user;
+    console.log(user, token)
+    // IdP data available using getAdditionalUserInfo(result)
+    // ...
+  }).catch((error) => {
+    
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    console.log(errorCode, errorMessage, credential);
+    // ...
+  });
 
 export {app, googleSignIn, auth}
