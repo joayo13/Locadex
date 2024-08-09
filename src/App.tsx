@@ -3,7 +3,8 @@ import logo from './logo.svg';
 import './App.css';
 import ImageUploader from './components/ImageUploader';
 import NewLocationGenerator from './components/NewLocationGenerator';
-import {app} from'./services/firebase'
+import {app, auth, googleSignIn} from'./services/firebase'
+import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
 //TODO: Implement this haversine equation for checking distance between lat longs 
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -16,9 +17,7 @@ import {app} from'./services/firebase'
 //   return 2 * r * Math.asin(Math.sqrt(a));
 // }
 const App: React.FC = () => {
-  useEffect(() => {
-    console.log(app)
-  },[])
+  const [signInWithGoogle, user, loading, error] = useSignInWithGoogle(auth);
   return (
     <div className="App">
       <header className="App-header">
@@ -29,6 +28,8 @@ const App: React.FC = () => {
         <div id="firebaseui-auth-container"></div>
 <ImageUploader/>
 <NewLocationGenerator/>
+<button onClick={() => signInWithGoogle()}>Google sign in</button>
+<button onClick={() => console.log(user)}>Is there a user</button>
       </header>
     </div>
   );
