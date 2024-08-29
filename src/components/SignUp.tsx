@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import '../App.css'
-import { signInUser } from '../services/firebase';
-type SignInProps = {
-    setSignInFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
+import { signUpUser } from '../services/firebase';
+type SignUpProps = {
+    setSignUpFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
   };
-function SignIn ({ setSignInFormVisible }: SignInProps) {
+function SignUp ({ setSignUpFormVisible }: SignUpProps) {
     useEffect(() => {
         // Disable scrollbar
         document.body.style.overflow = 'hidden';
@@ -20,14 +20,14 @@ function SignIn ({ setSignInFormVisible }: SignInProps) {
       const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log(event)
-        signInUser(email, password)
+        signUpUser(email, password)
         console.log('Email:', email);
         console.log('Password:', password);
       };
     
       return (
         <form className='sign-in-container' onSubmit={handleSubmit}>
-            <button onClick={() => setSignInFormVisible(false)}>exit</button>
+            <button onClick={() => setSignUpFormVisible(false)}>exit</button>
           <div>
             <label>Email:</label>
             <input
@@ -45,9 +45,9 @@ function SignIn ({ setSignInFormVisible }: SignInProps) {
               required
             />
           </div>
-          <button value={"signup"} type="submit">Sign In</button>
+          <button value={"signup"} type="submit">Sign Up</button>
         </form>
       );
     }
     
-    export default SignIn;
+    export default SignUp;

@@ -4,6 +4,7 @@ import './App.css';
 import ImageUploader from './components/ImageUploader';
 import NewLocationGenerator from './components/NewLocationGenerator';
 import SignIn from './components/SignIn'
+import SignUp from './components/SignUp';
 //TODO: Implement this haversine equation for checking distance between lat longs 
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -18,6 +19,7 @@ import SignIn from './components/SignIn'
 
 const App: React.FC = () => {
   const [signInFormVisible, setSignInFormVisible] = useState<boolean>(false)
+  const [signUpFormVisible, setSignUpFormVisible] = useState<boolean>(false)
   return (
     <div className="App">
       <header className="App-header">
@@ -27,8 +29,10 @@ const App: React.FC = () => {
         </p>
 <ImageUploader />
 <NewLocationGenerator />
-<button onClick={() => setSignInFormVisible(!signInFormVisible)}>sign in</button>
+<button onClick={() => setSignInFormVisible(!signInFormVisible)}>Sign In</button>
 {signInFormVisible? <SignIn setSignInFormVisible={setSignInFormVisible}/> : null}
+<button onClick={() => setSignInFormVisible(!signInFormVisible)}>Create Account</button>
+{signUpFormVisible? <SignUp setSignUpFormVisible={setSignUpFormVisible}/> : null}
       </header>
     </div>
   );
