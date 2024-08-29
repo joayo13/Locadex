@@ -34,7 +34,7 @@ function SignIn ({ setSignInFormVisible }: SignInProps) {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              required            />
+              required/>
           </div>
           <div>
             <label>Password:</label>
@@ -45,7 +45,7 @@ function SignIn ({ setSignInFormVisible }: SignInProps) {
               required
             />
           </div>
-          <button value={"signup"} type="submit">Sign In</button>
+          <button type="submit">Sign In</button>
         </form>
       );
     }

@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import ImageUploader from './components/ImageUploader';
 import NewLocationGenerator from './components/NewLocationGenerator';
 import SignIn from './components/SignIn'
 import SignUp from './components/SignUp';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { auth, signOutUser } from './services/firebase';
 //TODO: Implement this haversine equation for checking distance between lat longs 
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -20,6 +22,16 @@ import SignUp from './components/SignUp';
 const App: React.FC = () => {
   const [signInFormVisible, setSignInFormVisible] = useState<boolean>(false)
   const [signUpFormVisible, setSignUpFormVisible] = useState<boolean>(false)
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+
+    // Cleanup subscription on unmount
+    return () => unsubscribe();
+  }, []);
   return (
     <div className="App">
       <header className="App-header">
@@ -27,12 +39,14 @@ const App: React.FC = () => {
         <p>
           Ventura
         </p>
+        <p>Logged in as {user ? user.email : "guest"}</p>
 <ImageUploader />
 <NewLocationGenerator />
 <button onClick={() => setSignInFormVisible(!signInFormVisible)}>Sign In</button>
 {signInFormVisible? <SignIn setSignInFormVisible={setSignInFormVisible}/> : null}
-<button onClick={() => setSignInFormVisible(!signInFormVisible)}>Create Account</button>
+<button onClick={() => setSignUpFormVisible(!signUpFormVisible)}>Create Account</button>
 {signUpFormVisible? <SignUp setSignUpFormVisible={setSignUpFormVisible}/> : null}
+<button onClick={() => signOutUser(auth)}>Sign Out</button>
       </header>
     </div>
   );
