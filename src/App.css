@@ -27,6 +27,12 @@
 .App-link {
   color: #61dafb;
 }
+.sign-in-container {
+  background-color: red;
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+}
 
 @keyframes App-logo-spin {
   from {

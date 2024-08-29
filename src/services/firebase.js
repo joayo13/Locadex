@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithRedirect, getRedirectResult, GoogleAuthProvider } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -19,30 +19,38 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-const provider = new GoogleAuthProvider();
-signInWithRedirect(auth, provider);
-getRedirectResult(auth)
-  .then((result) => {
-    
-    // This gives you a Google Access Token. You can use it to access Google APIs.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    const token = credential.accessToken;
-
-    // The signed-in user info.
-    const user = result.user;
-    console.log(user, token)
-    // IdP data available using getAdditionalUserInfo(result)
+function signUpUser(email, password) {
+  createUserWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed up 
+    const user = userCredential.user;
+    console.log(user)
     // ...
-  }).catch((error) => {
-    
-    // Handle Errors here.
+  })
+  .catch((error) => {
     const errorCode = error.code;
     const errorMessage = error.message;
-    // The email of the user's account used.
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    console.log(errorCode, errorMessage, credential);
-    // ...
+    console.log(errorCode, errorMessage);
   });
-
-export {app, googleSignIn, auth}
+}
+function signInUser(email, password) {
+  signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    const user = userCredential.user;
+    console.log(user)
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorCode, errorMessage)
+  });
+}
+function signOutUser(auth) {
+  signOut(auth).then(() => {
+    console.log('signed out')
+  }).catch((error) => {
+    console.log(error)
+  });
+  
+}
+export {app, auth, signUpUser, signInUser, signOutUser}
