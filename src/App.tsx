@@ -65,7 +65,7 @@ const App: React.FC = () => {
             ) : null}
             <ImageUploader />
             <NewLocationGenerator />
-            <div>{isMobile ? 'heelo its mobile device' : null}</div>
+            <div>{isMobileDevice ? 'heelo its mobile device' : null}</div>
         </div>
     );
 };
