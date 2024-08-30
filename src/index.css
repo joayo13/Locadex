@@ -1,11 +1,16 @@
-body, label, button, input, select, textarea {
-  margin: 0;
-  font-family: 'Roboto', system-ui !important;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+body,
+label,
+button,
+input,
+select,
+textarea {
+    margin: 0;
+    font-family: 'Roboto', system-ui !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
 }
