@@ -19,15 +19,33 @@ const options = {
     maximumAge: 0,
 };
 
+let currentMarker: google.maps.marker.AdvancedMarkerElement | null = null;
+
 const updateUserPosition = (pos: GeolocationPosition) => {
+    // Remove the existing marker if it exists
+    if (currentMarker) {
+        currentMarker.map = null; // Remove from the map
+        currentMarker = null; // Release the reference
+    }
+
+    // Create new coordinates
     let coords = new google.maps.LatLng({
         lat: pos.coords.latitude,
         lng: pos.coords.longitude,
     });
-    new google.maps.marker.AdvancedMarkerElement({
+    const markerContent = document.createElement('div');
+    markerContent.style.width = '20px';
+    markerContent.style.height = '20px';
+    markerContent.style.backgroundColor = '#4285F4'; // Blue color
+    markerContent.style.borderRadius = '50%'; // Make it a circle
+    markerContent.style.border = '2px solid white'; // Optional: add a white border
+
+    // Create a new marker and set it to the map
+    currentMarker = new google.maps.marker.AdvancedMarkerElement({
         position: coords,
         map: map,
         title: 'me',
+        content: markerContent,
     });
 };
 
