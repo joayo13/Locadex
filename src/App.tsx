@@ -22,13 +22,14 @@ const App: React.FC = () => {
     const [signInFormVisible, setSignInFormVisible] = useState<boolean>(false);
     const [signUpFormVisible, setSignUpFormVisible] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
-    // const [isMobileDevice, setIsMobileDevice] = useState(false);
-    // const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    // if (isMobile) {
-    //     setIsMobileDevice(true);
-    // }
+    const [isMobileDevice, setIsMobileDevice] = useState(false);
+    
 
     useEffect(() => {
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if (isMobile) {
+            setIsMobileDevice(true);
+        }
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
         });
@@ -65,7 +66,7 @@ const App: React.FC = () => {
             ) : null}
             <ImageUploader />
             <NewLocationGenerator />
-            {/* <div>{isMobileDevice ? 'heelo its mobile device' : null}</div> */}
+            {isMobileDevice ? <div>Hey mobile</div> : <div>Not Mobile</div>}
         </div>
     );
 };
