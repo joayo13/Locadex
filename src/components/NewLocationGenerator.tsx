@@ -1,11 +1,12 @@
 import React from 'react';
 import '../App.css';
-import { initMap } from '../services/google';
+import { initMap, placePointer } from '../services/google';
 import getLocation from '../services/geolocation';
 const NewLocationGenerator: React.FC = () => {
+    let latLng: Array<number>;
     async function nextVentura() {
         try {
-            let latLng = await getLocation();
+            latLng = await getLocation();
             if (latLng && latLng.length === 2) {
                 initMap(latLng[0], latLng[1]);
             } else {
@@ -18,6 +19,7 @@ const NewLocationGenerator: React.FC = () => {
     return (
         <div style={{ height: '20rem', width: '100%' }}>
             <button onClick={() => nextVentura()}>initMap</button>
+            <button onClick={() => placePointer(latLng[0], latLng[1])}>New poi</button>
             <div id="map" style={{ height: '500px', width: '100%' }}></div>
         </div>
     );
