@@ -6,6 +6,7 @@ import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth, signOutUser } from './services/firebase';
+import MainNav from './components/MainNav';
 //TODO: Implement this haversine equation for checking distance between lat longs
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -20,7 +21,6 @@ import { auth, signOutUser } from './services/firebase';
 
 const App: React.FC = () => {
     const [signInFormVisible, setSignInFormVisible] = useState<boolean>(false);
-    const [signUpFormVisible, setSignUpFormVisible] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
     const [isMobileDevice, setIsMobileDevice] = useState(false);
     
@@ -39,30 +39,9 @@ const App: React.FC = () => {
     }, []);
     return (
         <div className="App">
-            <p>Ventura</p>
-            <p>Logged in as {user ? user.email : 'guest'}</p>
-            {!user ? (
-                <button
-                    onClick={() => setSignInFormVisible(!signInFormVisible)}
-                >
-                    Sign In
-                </button>
-            ) : null}
+            <MainNav user={user} setSignInFormVisible={setSignInFormVisible} signInFormVisible={signInFormVisible} />
             {signInFormVisible ? (
                 <SignIn setSignInFormVisible={setSignInFormVisible} />
-            ) : null}
-            {!user ? (
-                <button
-                    onClick={() => setSignUpFormVisible(!signUpFormVisible)}
-                >
-                    Create Account
-                </button>
-            ) : null}
-            {signUpFormVisible ? (
-                <SignUp setSignUpFormVisible={setSignUpFormVisible} />
-            ) : null}
-            {user ? (
-                <button onClick={() => signOutUser(auth)}>Sign Out</button>
             ) : null}
             <ImageUploader />
             <NewLocationGenerator />

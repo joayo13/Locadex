@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import '../App.css';
 import { signInUser } from '../services/firebase';
+import SignUp from './SignUp';
 type SignInProps = {
     setSignInFormVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -16,6 +17,7 @@ function SignIn({ setSignInFormVisible }: SignInProps) {
     }, []); // Empty dependency array ensures this runs only on mount/unmount
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [signUpFormVisible, setSignUpFormVisible] = useState<boolean>(false);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -24,30 +26,36 @@ function SignIn({ setSignInFormVisible }: SignInProps) {
         console.log('Email:', email);
         console.log('Password:', password);
     };
+    const signIn = <div className="sign-in-container"><form onSubmit={handleSubmit}>
+    <button onClick={() => setSignInFormVisible(false)}>exit</button>
+    <div>
+        <label>Email:</label>
+        <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+        />
+    </div>
+    <div>
+        <label>Password:</label>
+        <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+        />
+    </div>
+    <button type="submit">Sign In</button>
+</form>
+<button onClick={() => setSignUpFormVisible(true)}>Create Account</button>
+</div>
 
     return (
-        <form className="sign-in-container" onSubmit={handleSubmit}>
-            <button onClick={() => setSignInFormVisible(false)}>exit</button>
-            <div>
-                <label>Email:</label>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label>Password:</label>
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </div>
-            <button type="submit">Sign In</button>
-        </form>
+        <div>
+        {signUpFormVisible ? <SignUp setSignUpFormVisible={setSignUpFormVisible}/> : signIn}
+        </div>
+
     );
 }
 
