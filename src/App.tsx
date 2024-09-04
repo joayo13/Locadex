@@ -38,14 +38,14 @@ const App: React.FC = () => {
         return () => unsubscribe();
     }, []);
     return (
-        <div className="App">
+        <div>
             <MainNav user={user} setSignInFormVisible={setSignInFormVisible} signInFormVisible={signInFormVisible} />
             {signInFormVisible ? (
                 <SignIn setSignInFormVisible={setSignInFormVisible} />
             ) : null}
             <ImageUploader />
             <NewLocationGenerator />
-            {isMobileDevice ? <div>Hey mobile</div> : <div>Not Mobile</div>}
+            {isMobileDevice ? <div>Hey mobile</div> : <div>Not Mobile Haha</div>}
         </div>
     );
 };
