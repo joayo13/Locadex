@@ -22,7 +22,7 @@ function MainNav({user, signInFormVisible, setSignInFormVisible}: MainNavProps) 
 	}
   return (
     <nav className='bg-neutral-900 text-neutral-200 flex justify-between items-center px-2 h-16'><p className='text-xl text-blue-400'>Ventura</p>
-    {overlay ? <div onClick={handleOverlayClick} className={`overlay ${menuOpen ? 'animate-layout-open' : 'animate-layout-close'}`} onAnimationEnd={() => {if(!menuOpen) setOverlay(false); console.log('okay')}}></div> : null}
+    <div onClick={handleOverlayClick} className={`overlay ${menuOpen ? 'animate-layout-open' : 'animate-layout-close'}`}></div>
     <button
 					className={`hamburger hamburger--collapse ${menuOpen ? 'is-active' : ''}`}
 					onClick={toggleMenu}
