@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
 import './App.css';
 import ImageUploader from './components/ImageUploader';
 import NewLocationGenerator from './components/NewLocationGenerator';
-import SignIn from './components/SignIn';
+import SignIn from './pages/SignIn';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './services/firebase';
 import MainNav from './components/MainNav';
+import SignUp from './pages/SignUp';
+import Home from './pages/Home';
+import NotFound from './pages/NotFound';
 //TODO: Implement this haversine equation for checking distance between lat longs
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -19,16 +27,9 @@ import MainNav from './components/MainNav';
 // }
 
 const App: React.FC = () => {
-    const [signInFormVisible, setSignInFormVisible] = useState<boolean>(false);
     const [user, setUser] = useState<User | null>(null);
-    const [isMobileDevice, setIsMobileDevice] = useState(false);
-    
 
     useEffect(() => {
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile) {
-            setIsMobileDevice(true);
-        }
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
         });
@@ -36,16 +37,26 @@ const App: React.FC = () => {
         // Cleanup subscription on unmount
         return () => unsubscribe();
     }, []);
+
     return (
-        <div className='bg-neutral-900 text-neutral-200 px-2'>
-            <MainNav user={user} setSignInFormVisible={setSignInFormVisible} signInFormVisible={signInFormVisible} />
-            {signInFormVisible ? (
-                <SignIn setSignInFormVisible={setSignInFormVisible} />
-            ) : null}
-            <ImageUploader />
-            <NewLocationGenerator />
-            {isMobileDevice ? <div>Hey mobile</div> : <div>Not Mobile Haha</div>}
-        </div>
+        <Router>
+            <MainNav user={user}/>
+            <Routes>
+                <Route path='/' element={<Home />} />
+                <Route path='/sign-in' element={<SignIn />} />
+                <Route path='/sign-up' element={<SignUp />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+        </Router>
+        // <div className='bg-neutral-900 text-neutral-200 px-2'>
+        //     <MainNav user={user} setSignInFormVisible={setSignInFormVisible} signInFormVisible={signInFormVisible} />
+        //     {signInFormVisible ? (
+        //         <SignIn setSignInFormVisible={setSignInFormVisible} />
+        //     ) : null}
+        //     <ImageUploader />
+        //     <NewLocationGenerator />
+        //     {isMobileDevice ? <div>Hey mobile</div> : <div>Not Mobile Haha</div>}
+        // </div>
     );
 };
 
