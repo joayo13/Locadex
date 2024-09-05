@@ -26,7 +26,7 @@ function SignUp({ setSignUpFormVisible }: SignUpProps) {
     };
 
     return (
-        <form className="sign-in-container" onSubmit={handleSubmit}>
+        <form className="sign-in-container bg-neutral-900 text-neutral-200" onSubmit={handleSubmit}>
             <button onClick={() => setSignUpFormVisible(false)}>exit</button>
             <div>
                 <label>Email:</label>

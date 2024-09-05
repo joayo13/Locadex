@@ -3,9 +3,8 @@ import './App.css';
 import ImageUploader from './components/ImageUploader';
 import NewLocationGenerator from './components/NewLocationGenerator';
 import SignIn from './components/SignIn';
-import SignUp from './components/SignUp';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth, signOutUser } from './services/firebase';
+import { auth } from './services/firebase';
 import MainNav from './components/MainNav';
 //TODO: Implement this haversine equation for checking distance between lat longs
 // function distance(lat1, lon1, lat2, lon2) {
@@ -38,7 +37,7 @@ const App: React.FC = () => {
         return () => unsubscribe();
     }, []);
     return (
-        <div>
+        <div className='bg-neutral-900 text-neutral-200 px-2'>
             <MainNav user={user} setSignInFormVisible={setSignInFormVisible} signInFormVisible={signInFormVisible} />
             {signInFormVisible ? (
                 <SignIn setSignInFormVisible={setSignInFormVisible} />

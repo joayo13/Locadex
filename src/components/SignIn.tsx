@@ -26,7 +26,7 @@ function SignIn({ setSignInFormVisible }: SignInProps) {
         console.log('Email:', email);
         console.log('Password:', password);
     };
-    const signIn = <div className="sign-in-container"><form onSubmit={handleSubmit}>
+    const signIn = <div className="sign-in-container bg-neutral-900 text-neutral-200"><form onSubmit={handleSubmit}>
     <button onClick={() => setSignInFormVisible(false)}>exit</button>
     <div>
         <label>Email:</label>

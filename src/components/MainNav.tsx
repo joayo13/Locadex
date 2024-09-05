@@ -9,10 +9,9 @@ interface MainNavProps {
 
 function MainNav({user, signInFormVisible, setSignInFormVisible}: MainNavProps) {
   return (
-    <nav><p>Ventura</p>
-    <p>Logged in as {user ? user.email : 'guest'}</p>
+    <nav className='bg-neutral-900 text-neutral-200 flex justify-between items-center px-2 h-16'><p className='text-xl text-blue-400'>Ventura</p>
     {!user ? (
-        <button
+        <button className='bg-blue-800 py-2 px-4 rounded'
             onClick={() => setSignInFormVisible(!signInFormVisible)}
         >
             Sign In
