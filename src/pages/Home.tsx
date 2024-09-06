@@ -10,11 +10,11 @@ function Home() {
     },[])
     
   return (
-    <div className='bg-stone-950 min-h-screen text-stone-200 p-2'>
+    <div className='bg-stone-950 min-h-screen text-stone-200 px-4'>
         {isMobileDevice ? <div></div> : null}
         <h1 className='text-6xl py-4 playfair text-orange-400'>Your next adventure awaits.</h1>
-        <p>The Locadex is an all-in-one travel companion that uses GPS and Google Maps and gives you fun things to do near you.</p>
-        <p>Track your progress over time and eventually have hundreds or even thousands of locations. With all the pictures in your personal in-app photo album.</p>
+        <p>The Locadex is an all-in-one travel companion that uses GPS and Google Maps to give you fun things to do near you.</p>
+        <p>Snap pictures in the app to complete assigned locations. Track your progress over time and keep on hunting down new locations. It's as simple as that.</p>
     </div>
   )
 }

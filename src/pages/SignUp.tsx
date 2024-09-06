@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../App.css';
 import { signUpUser } from '../services/firebase';
-import { Link } from 'react-router-dom';
+import AnimatedLink from '../components/AnimatedLink';
 
 function SignUp() {
     const [email, setEmail] = useState('');
@@ -55,7 +55,7 @@ function SignUp() {
             <button className='bg-orange-800 w-fit text-stone-200 mx-auto px-4 py-2 rounded-sm' type="submit">
                 Sign Up
             </button>
-            <Link className='block underline mx-auto' to={"/sign-in"}>Already have an account?</Link>
+            <AnimatedLink className='block underline mx-auto' to={"/sign-in"}>Already have an account?</AnimatedLink>
         </form>
         </div>
     );

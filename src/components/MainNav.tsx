@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { auth, signOutUser } from '../services/firebase'
 import { User } from 'firebase/auth';
-import { Link } from 'react-router-dom';
+import AnimatedLink from './AnimatedLink';
 interface MainNavProps {
     user: User | null;
 }
@@ -28,15 +28,15 @@ function MainNav({user}: MainNavProps) {
 	}
   return (
     <>
-    <nav className='bg-stone-900 shadow-lg text-stone-200 flex justify-between items-center pl-4 h-16 fixed w-full z-20'><Link to={"/"} onClick={() => setMenuOpen(false)} className='text-xl playfair text-orange-400'>Locadex</Link>
+    <nav className='bg-stone-900 shadow-lg text-stone-200 flex justify-between items-center pl-4 h-16 fixed w-full z-20'><AnimatedLink to={"/"} onClick={() => setMenuOpen(false)} className='text-xl playfair text-orange-400'>Locadex</AnimatedLink>
     <div onClick={handleOverlayClick} className={`overlay ${menuOpen ? 'animate-overlay-open' : 'animate-overlay-close'}`}></div>
     <nav aria-label='mobile-menu' className={`mobile-menu bg-stone-950 text-stone-200 p-4 ${menuOpen ? 'animate-mobile-menu-open' : 'animate-mobile-menu-close'}`}>
       <ul className='flex flex-col items-start gap-8'>
-        <button className='underline'>Start Adventure</button>
-        <button className='underline'>Location Index</button>
+        <AnimatedLink to={"/adventure"} className='underline'>Start Adventure</AnimatedLink>
+        <AnimatedLink to={"/location-index"} className='underline'>Location Index</AnimatedLink>
         <span className='h-px bg-stone-200 w-full'></span>
         {user ? <p>Logged in as {user.email}</p> : null}
-        {user ? <button onClick={() => {setMenuOpen(false);signOutUser(auth)}} className='underline'>Sign Out</button> : <Link to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</Link>}
+        {user ? <button onClick={() => {setMenuOpen(false);signOutUser(auth)}} className='underline'>Sign Out</button> : <AnimatedLink to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</AnimatedLink>}
 
       </ul>
     </nav>
