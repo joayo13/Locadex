@@ -5,8 +5,6 @@ import {
   Route,
 } from "react-router-dom";
 import './App.css';
-import ImageUploader from './components/ImageUploader';
-import NewLocationGenerator from './components/NewLocationGenerator';
 import SignIn from './pages/SignIn';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { auth } from './services/firebase';
