@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import '../App.css';
 import { signInUser } from '../services/firebase';
-import SignUp from './SignUp';
 import { Link } from 'react-router-dom';
 
 function SignIn() {
