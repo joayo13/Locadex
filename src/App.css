@@ -11,6 +11,7 @@
     background: rgba(0, 0, 0, 0.5);
     z-index: 2;
     transition: opacity 0.3s ease;
+	transition-delay: 250ms;
     opacity: 0;
 }
 .animate-overlay-open {
@@ -30,6 +31,7 @@
 	height: 100vh;
 	z-index: 3;
 	transition: all 0.3s ease;
+	transition-delay: 250ms;
 	transform: translateX(100%);
 }
 .animate-mobile-menu-open {
