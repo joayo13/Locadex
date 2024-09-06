@@ -38,7 +38,7 @@ function SignIn() {
                     required
                 />
             </div>
-            <button className='bg-orange-800 w-fit text-stone-200 translate-x-1/2 px-4 py-2 rounded-sm' type="submit">
+            <button className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm' type="submit">
                 Sign In
             </button>
             <Link className='block underline mx-auto' to={"/sign-up"}>Haven't signed up yet?</Link>

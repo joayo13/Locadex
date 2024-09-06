@@ -28,7 +28,7 @@ function MainNav({user}: MainNavProps) {
 	}
   return (
     <>
-    <nav className='bg-stone-900 shadow-lg text-stone-200 flex justify-between items-center pl-4 h-16 fixed w-full z-20'><Link to={"/"} className='text-xl playfair text-orange-400'>Locadex</Link>
+    <nav className='bg-stone-900 shadow-lg text-stone-200 flex justify-between items-center pl-4 h-16 fixed w-full z-20'><Link to={"/"} onClick={() => setMenuOpen(false)} className='text-xl playfair text-orange-400'>Locadex</Link>
     <div onClick={handleOverlayClick} className={`overlay ${menuOpen ? 'animate-overlay-open' : 'animate-overlay-close'}`}></div>
     <nav aria-label='mobile-menu' className={`mobile-menu bg-stone-950 text-stone-200 p-4 ${menuOpen ? 'animate-mobile-menu-open' : 'animate-mobile-menu-close'}`}>
       <ul className='flex flex-col items-start gap-8'>
