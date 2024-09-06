@@ -21,12 +21,12 @@ function SignUp() {
     };
 
     return (
-        <div className='min-h-[calc(100vh-4rem)] bg-neutral-950 flex items-center justify-center text-blue-400'>
+        <div className='min-h-[calc(100vh-4rem)] bg-stone-950 flex items-center justify-center text-orange-400'>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
             <div>
                 <label className='block'>Email</label>
                 <input
-                    className='bg-neutral-900 border border-blue-400 rounded-sm indent-2'
+                    className='bg-stone-900 border border-orange-400 rounded-sm indent-2'
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -36,7 +36,7 @@ function SignUp() {
             <div>
                 <label className='block'>Password</label>
                 <input
-                    className='bg-neutral-900 border border-blue-400 rounded-sm indent-2'
+                    className='bg-stone-900 border border-orange-400 rounded-sm indent-2'
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -46,14 +46,14 @@ function SignUp() {
             <div>
                 <label className='block'>Confirm Password</label>
                 <input
-                    className='bg-neutral-900 border border-blue-400 rounded-sm indent-2'
+                    className='bg-stone-900 border border-orange-400 rounded-sm indent-2'
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                 />
             </div>
-            <button className='bg-blue-800 w-fit text-neutral-200 translate-x-1/2 px-4 py-2 rounded-sm' type="submit">
+            <button className='bg-orange-800 w-fit text-stone-200 translate-x-1/2 px-4 py-2 rounded-sm' type="submit">
                 Sign Up
             </button>
             <Link className='block underline mx-auto' to={"/sign-in"}>Already have an account?</Link>

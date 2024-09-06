@@ -28,13 +28,13 @@ function MainNav({user}: MainNavProps) {
 	}
   return (
     <>
-    <nav className='bg-neutral-900 shadow-lg text-neutral-200 flex justify-between items-center px-2 h-16 fixed w-full z-20'><Link to={"/"} className='text-xl text-blue-400'>Ventura</Link>
+    <nav className='bg-stone-900 shadow-lg text-stone-200 flex justify-between items-center pl-4 h-16 fixed w-full z-20'><Link to={"/"} className='text-xl playfair text-orange-400'>Locadex</Link>
     <div onClick={handleOverlayClick} className={`overlay ${menuOpen ? 'animate-overlay-open' : 'animate-overlay-close'}`}></div>
-    <nav aria-label='mobile-menu' className={`mobile-menu bg-neutral-950 text-neutral-200 p-4 ${menuOpen ? 'animate-mobile-menu-open' : 'animate-mobile-menu-close'}`}>
+    <nav aria-label='mobile-menu' className={`mobile-menu bg-stone-950 text-stone-200 p-4 ${menuOpen ? 'animate-mobile-menu-open' : 'animate-mobile-menu-close'}`}>
       <ul className='flex flex-col items-start gap-8'>
-        <button className='underline'>My Adventure</button>
+        <button className='underline'>Start Adventure</button>
         <button className='underline'>Location Index</button>
-        <span className='h-px bg-neutral-200 w-full'></span>
+        <span className='h-px bg-stone-200 w-full'></span>
         {user ? <p>Logged in as {user.email}</p> : null}
         {user ? <button onClick={() => {setMenuOpen(false);signOutUser(auth)}} className='underline'>Sign Out</button> : <Link to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</Link>}
 
@@ -52,7 +52,7 @@ function MainNav({user}: MainNavProps) {
 				</button>
     </nav>
     {/* to create a consistent margin at top for any content or pages so we don't have to do it manually for every page */}
-    <div className='h-16 w-full bg-neutral-950'></div>
+    <div className='h-16 w-full bg-stone-950'></div>
     </>
   )
 }

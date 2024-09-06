@@ -1,4 +1,6 @@
-
+.playfair {
+	font-family: 'Playfair Display', 'Times New Roman', Times, serif;
+}
 .overlay {
     display: block;
     position: fixed;
@@ -61,7 +63,7 @@
 	.hamburger.is-active .hamburger-inner,
 	.hamburger.is-active .hamburger-inner::before,
 	.hamburger.is-active .hamburger-inner::after {
-		background-color: #60a5fa;
+		background-color: #fb923c;
 	}
 
 	.hamburger-box {
@@ -81,7 +83,7 @@
 	.hamburger-inner::after {
 		width: 40px;
 		height: 4px;
-		background-color: #60a5fa;
+		background-color: #fb923c;
 		border-radius: 4px;
 		position: absolute;
 		transition-property: transform;
