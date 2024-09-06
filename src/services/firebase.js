@@ -2,8 +2,6 @@
 import { initializeApp } from 'firebase/app';
 import {
     getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
     signOut,
 } from 'firebase/auth';
 // TODO: Add SDKs for Firebase products that you want to use
@@ -24,32 +22,6 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-function signUpUser(email, password) {
-    createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            // Signed up
-            const user = userCredential.user;
-            console.log(user);
-            // ...
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-        });
-}
-function signInUser(email, password) {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            const user = userCredential.user;
-            console.log(user);
-        })
-        .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-        });
-}
 function signOutUser(auth) {
     signOut(auth)
         .then(() => {
@@ -59,4 +31,4 @@ function signOutUser(auth) {
             console.log(error);
         });
 }
-export { app, auth, signUpUser, signInUser, signOutUser };
+export { app, auth, signOutUser };

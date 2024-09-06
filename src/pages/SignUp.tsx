@@ -1,27 +1,43 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { signUpUser } from '../services/firebase';
+import { auth } from '../services/firebase';
 import AnimatedLink from '../components/AnimatedLink';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
+import { flushSync } from 'react-dom';
 
 function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [error, setError] = useState('')
+    const navigate = useNavigate()
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log(event);
         if(confirmPassword !== password) {
-            return alert('passwords do not match')
+            setError('Passwords do not match')
+            return;
         }
-        signUpUser(email, password);
-        console.log('Email:', email);
-        console.log('Password:', password);
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            document.startViewTransition(() => {
+                flushSync(() => {
+                  navigate("/");
+                });
+              });
+        })
+        .catch((error) => {
+            const errorMessage = error.message;
+            setError(`${errorMessage}`)
+        });
     };
 
     return (
         <div className='min-h-[calc(100vh-4rem)] bg-stone-950 flex items-center justify-center text-orange-400'>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+        <div className='w-44 text-red-400'>{error}</div>
             <div>
                 <label className='block'>Email</label>
                 <input
