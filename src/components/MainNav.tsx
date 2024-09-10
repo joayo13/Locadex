@@ -32,8 +32,8 @@ function MainNav({user}: MainNavProps) {
     <div onClick={handleOverlayClick} className={`overlay ${menuOpen ? 'animate-overlay-open' : 'animate-overlay-close'}`}></div>
     <nav aria-label='mobile-menu' className={`mobile-menu bg-stone-950 text-stone-200 p-4 ${menuOpen ? 'animate-mobile-menu-open' : 'animate-mobile-menu-close'}`}>
       <ul className='flex flex-col items-start gap-8'>
-        <AnimatedLink to={"/adventure"} className='underline'>Start Adventure</AnimatedLink>
-        <AnimatedLink to={"/location-index"} className='underline'>Location Index</AnimatedLink>
+        <AnimatedLink onClick={() => setMenuOpen(false)} to={"/adventure"} className='underline'>Start Adventure</AnimatedLink>
+        <AnimatedLink onClick={() => setMenuOpen(false)}  to={"/location-index"} className='underline'>Location Index</AnimatedLink>
         <span className='h-px bg-stone-200 w-full'></span>
         {user ? <p>Logged in as {user.email}</p> : null}
         {user ? <button onClick={() => {setMenuOpen(false);signOutUser(auth)}} className='underline'>Sign Out</button> : <AnimatedLink to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</AnimatedLink>}

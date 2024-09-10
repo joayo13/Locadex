@@ -1,31 +1,15 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { auth } from '../services/firebase';
 import AnimatedLink from '../components/AnimatedLink';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { flushSync } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const navigate = useNavigate()
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            document.startViewTransition(() => {
-                flushSync(() => {
-                  navigate("/");
-                });
-              });
-        })
-        .catch((error) => {
-            const errorMessage = error.message;
-            setError(`${errorMessage}`)
-        });
+        setError('todo')
     };
 
     return (
