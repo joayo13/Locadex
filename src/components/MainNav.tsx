@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { auth, signOutUser } from '../services/firebase'
-import { User } from 'firebase/auth';
 import AnimatedLink from './AnimatedLink';
-interface MainNavProps {
-    user: User | null;
-}
+import { useAuth } from '../contexts/AuthContext';
 
-function MainNav({user}: MainNavProps) {
+function MainNav() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { currentUser, logout } = useAuth();
   function toggleMenu() {
    setMenuOpen(!menuOpen)
   }
@@ -35,8 +32,8 @@ function MainNav({user}: MainNavProps) {
         <AnimatedLink onClick={() => setMenuOpen(false)} to={"/adventure"} className='underline'>Start Adventure</AnimatedLink>
         <AnimatedLink onClick={() => setMenuOpen(false)}  to={"/location-index"} className='underline'>Location Index</AnimatedLink>
         <span className='h-px bg-stone-200 w-full'></span>
-        {user ? <p>Logged in as {user.email}</p> : null}
-        {user ? <button onClick={() => {setMenuOpen(false);signOutUser(auth)}} className='underline'>Sign Out</button> : <AnimatedLink to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</AnimatedLink>}
+        {currentUser ? <p>Logged in as {currentUser.email}</p> : null}
+        {currentUser ? <button onClick={() => {logout(); setMenuOpen(false)}} className='underline'>Sign Out</button> : <AnimatedLink to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</AnimatedLink>}
 
       </ul>
     </nav>

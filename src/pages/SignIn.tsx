@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
 import '../App.css';
 import AnimatedLink from '../components/AnimatedLink';
+import { useAuth } from '../contexts/AuthContext';
 
 function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const { login, googleSignIn } = useAuth()
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        setError('todo')
+        try {
+            login(email, password)
+        }
+        catch(e) {
+            console.log(e)
+            setError('check console')
+        }
+        
     };
 
     return (
@@ -38,6 +47,9 @@ function SignIn() {
             </div>
             <button className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm' type="submit">
                 Sign In
+            </button>
+            <button type="button" onClick={() => googleSignIn()} className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm'>
+                Sign In With Google
             </button>
             <AnimatedLink className='block underline mx-auto' to={"/sign-up"}>Haven't signed up yet?</AnimatedLink>
         </form>

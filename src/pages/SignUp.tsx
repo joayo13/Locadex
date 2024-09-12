@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import '../App.css';
-import { auth } from '../services/firebase';
 import AnimatedLink from '../components/AnimatedLink';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
-import { flushSync } from 'react-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('')
-    const navigate = useNavigate()
+    const { signup } = useAuth()
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -20,18 +17,11 @@ function SignUp() {
             setError('Passwords do not match')
             return;
         }
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            document.startViewTransition(() => {
-                flushSync(() => {
-                  navigate("/");
-                });
-              });
-        })
-        .catch((error) => {
-            const errorMessage = error.message;
-            setError(`${errorMessage}`)
-        });
+        try {
+            signup(email, password)
+        } catch (error) {
+            console.log(error)
+        }
     };
 
     return (

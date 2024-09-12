@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -6,13 +6,12 @@ import {
 } from "react-router-dom";
 import './App.css';
 import SignIn from './pages/SignIn';
-import { onAuthStateChanged, User } from 'firebase/auth';
-import { auth } from './services/firebase';
 import MainNav from './components/MainNav';
 import SignUp from './pages/SignUp';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import LocationIndex from './pages/LocationIndex';
+import AuthProvider from './contexts/AuthContext';
 //TODO: Implement this haversine equation for checking distance between lat longs
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -26,20 +25,10 @@ import LocationIndex from './pages/LocationIndex';
 // }
 
 const App: React.FC = () => {
-    const [user, setUser] = useState<User | null>(null);
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-
-        // Cleanup subscription on unmount
-        return () => unsubscribe();
-    }, []);
-
     return (
         <Router>
-            <MainNav user={user}/>
+            <AuthProvider>
+            <MainNav/>
             <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='/sign-in' element={<SignIn />} />
@@ -47,6 +36,7 @@ const App: React.FC = () => {
                 <Route path='/location-index' element={<LocationIndex />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
+            </AuthProvider>
         </Router>
         // <div className='bg-neutral-900 text-neutral-200 px-2'>
         //     <MainNav user={user} setSignInFormVisible={setSignInFormVisible} signInFormVisible={signInFormVisible} />
