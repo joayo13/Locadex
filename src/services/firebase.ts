@@ -8,7 +8,7 @@ import { getAuth } from 'firebase/auth';
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: 'theventura.netlify.app',
+    authDomain: 'ventura-e1865.firebaseapp.com',
     projectId: 'ventura-e1865',
     storageBucket: "ventura-e1865.appspot.com",
     messagingSenderId: '658474063946',

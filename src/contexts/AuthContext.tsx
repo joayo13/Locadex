@@ -7,7 +7,6 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   signInWithPopup, 
-  signInWithRedirect, 
   GoogleAuthProvider 
 } from 'firebase/auth';
 import { app } from '../services/firebase';
@@ -57,13 +56,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Google Sign-In with Popup or Redirect (for mobile)
   const googleSignIn = async () => {
     try {
-      const isMobile = window.innerWidth <= 768; // Simple check for mobile devices
-
-      if (isMobile) {
-        await signInWithRedirect(auth, googleProvider); // Use redirect on mobile devices
-      } else {
         await signInWithPopup(auth, googleProvider); // Use popup on desktops
-      }
     } catch (error) {
       console.error('Google sign-in error:', error);
       throw error;
