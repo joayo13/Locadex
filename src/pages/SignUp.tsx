@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import '../App.css';
 import AnimatedLink from '../components/AnimatedLink';
 import { useAuth } from '../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { flushSync } from 'react-dom';
 
 function SignUp() {
     const [email, setEmail] = useState('');
@@ -9,8 +11,9 @@ function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('')
     const { signup } = useAuth()
+    const navigate = useNavigate()
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log(event);
         if(confirmPassword !== password) {
@@ -18,7 +21,13 @@ function SignUp() {
             return;
         }
         try {
-            signup(email, password)
+            await signup(email, password)
+            document.startViewTransition(() => {
+                flushSync(() => {
+                  navigate("/");
+                });
+              });
+            
         } catch (error) {
             console.log(error)
         }

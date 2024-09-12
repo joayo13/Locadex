@@ -12,6 +12,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import LocationIndex from './pages/LocationIndex';
 import AuthProvider from './contexts/AuthContext';
+import PrivateRoute from "./components/PrivateRoute";
 //TODO: Implement this haversine equation for checking distance between lat longs
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -30,10 +31,10 @@ const App: React.FC = () => {
             <AuthProvider>
             <MainNav/>
             <Routes>
-                <Route path='/' element={<Home />} />
+                <Route path='/' element={<PrivateRoute><Home /></PrivateRoute>} />
                 <Route path='/sign-in' element={<SignIn />} />
                 <Route path='/sign-up' element={<SignUp />} />
-                <Route path='/location-index' element={<LocationIndex />} />
+                <Route path='/location-index' element={<PrivateRoute><LocationIndex /></PrivateRoute>} />
                 <Route path="*" element={<NotFound />} />
             </Routes>
             </AuthProvider>

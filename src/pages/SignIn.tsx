@@ -2,17 +2,25 @@ import React, { useState } from 'react';
 import '../App.css';
 import AnimatedLink from '../components/AnimatedLink';
 import { useAuth } from '../contexts/AuthContext';
+import { flushSync } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 
 function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const { login, googleSignIn } = useAuth()
+    const navigate = useNavigate()
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
-            login(email, password)
+            await login(email, password)
+            document.startViewTransition(() => {
+                flushSync(() => {
+                  navigate("/");
+                });
+              });
         }
         catch(e) {
             console.log(e)
@@ -20,6 +28,14 @@ function SignIn() {
         }
         
     };
+    const handleGoogleSignIn = async () => {
+        await googleSignIn()
+        document.startViewTransition(() => {
+            flushSync(() => {
+              navigate("/");
+            });
+          });
+    }
 
     return (
         <div className='min-h-[calc(100vh-4rem)] bg-stone-950 flex items-center justify-center text-orange-400'>
@@ -48,7 +64,7 @@ function SignIn() {
             <button className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm' type="submit">
                 Sign In
             </button>
-            <button type="button" onClick={() => googleSignIn()} className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm'>
+            <button type="button" onClick={() => handleGoogleSignIn()} className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm'>
                 Sign In With Google
             </button>
             <AnimatedLink className='block underline mx-auto' to={"/sign-up"}>Haven't signed up yet?</AnimatedLink>
