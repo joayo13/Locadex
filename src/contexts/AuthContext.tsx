@@ -62,7 +62,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (isMobile) {
         await signInWithRedirect(auth, googleProvider); // Use redirect on mobile devices
       } else {
-        // await signInWithPopup(auth, googleProvider); // Use popup on desktops
+        await signInWithPopup(auth, googleProvider); // Use popup on desktops
       }
     } catch (error) {
       console.error('Google sign-in error:', error);
