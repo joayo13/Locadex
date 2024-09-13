@@ -42,6 +42,7 @@ function MainNav() {
       <ul className='flex flex-col items-start gap-8'>
         <AnimatedLink onClick={() => setMenuOpen(false)} to={"/adventure"} className='underline'>Start Adventure</AnimatedLink>
         <AnimatedLink onClick={() => setMenuOpen(false)}  to={"/location-index"} className='underline'>Location Index</AnimatedLink>
+        <AnimatedLink onClick={() => setMenuOpen(false)} to={"/map"} className='underline'>Map</AnimatedLink>
         <span className='h-px bg-stone-200 w-full'></span>
         {currentUser ? <p>Logged in as {currentUser.email}</p> : null}
         {currentUser ? <button onClick={() => {handleLogout(); setMenuOpen(false)}} className='underline'>Sign Out</button> : <AnimatedLink to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</AnimatedLink>}

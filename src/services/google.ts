@@ -1,11 +1,14 @@
+import getLocation from "./geolocation";
+
 let map: google.maps.Map;
 
-export const initMap = (lat: number, lng: number) => {
-    const center = new google.maps.LatLng(lat, lng);
+export const initMap = async () => {
+    let latlng = await getLocation()
+    const center = new google.maps.LatLng(latlng[0], latlng[1]);
     map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
         center: center,
         zoom: 15,
-        mapId: '88c0dfbb3ce2d741',
+        mapId: '7c4573adc746c106',
     });
     //Initialize user position on map, set marker in updateUserPosition
     navigator.geolocation.watchPosition(updateUserPosition, error, options);
