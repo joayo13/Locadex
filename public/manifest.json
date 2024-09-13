@@ -10,12 +10,7 @@
         {
             "src": "locadex-logo_140.png",
             "type": "image/png",
-            "sizes": "192x192"
-        },
-        {
-            "src": "locadex-logo_140.png",
-            "type": "image/png",
-            "sizes": "512x512"
+            "sizes": "140x140"
         }
     ],
     "screenshots": [
