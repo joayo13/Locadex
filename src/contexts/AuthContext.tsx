@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode, useRef } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import { 
   getAuth, 
   onAuthStateChanged, 
@@ -10,11 +10,11 @@ import {
   GoogleAuthProvider 
 } from 'firebase/auth';
 import { app } from '../services/firebase';
-import { useNavigate } from 'react-router-dom';
 
 // Create a context for the authentication state
 interface AuthContextType {
   currentUser: User | null;
+  loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string) => Promise<void>;
   googleSignIn: () => Promise<void>; // Google Sign-In function
@@ -33,17 +33,14 @@ export const useAuth = () => {
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
-  const navigate = useNavigate()
-  const navigateRef = useRef(navigate)
   // Listen for changes in the authentication state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if(user) {
-        navigateRef.current("/")
-      }
       setCurrentUser(user);
+      setLoading(false);
     });
     return () => unsubscribe();
   }, [auth]);
@@ -75,6 +72,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const value = {
     currentUser,
+    loading,
     login,
     signup,
     googleSignIn,  // Provide the Google Sign-In function

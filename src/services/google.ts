@@ -1,7 +1,7 @@
 import getLocation from "./geolocation";
 
-let map: google.maps.Map;
-
+let map: google.maps.Map | null;
+let watcherId: number | null = null; // Store the watcher ID
 export const initMap = async () => {
     let latlng = await getLocation()
     const center = new google.maps.LatLng(latlng[0], latlng[1]);
@@ -10,8 +10,20 @@ export const initMap = async () => {
         zoom: 15,
         mapId: '7c4573adc746c106',
     });
-    //Initialize user position on map, set marker in updateUserPosition
-    navigator.geolocation.watchPosition(updateUserPosition, error, options);
+};
+export const initUserPosition = () => {
+    if (watcherId !== null) {
+        navigator.geolocation.clearWatch(watcherId); // Clear any existing watcher
+    }
+
+    // Start watching the user's position
+    watcherId = navigator.geolocation.watchPosition(updateUserPosition, error, options);
+};
+export const cleanupUserPosition = () => {
+    if (watcherId !== null) {
+        navigator.geolocation.clearWatch(watcherId); // Clear the watcher on unmount
+        watcherId = null; // Reset the watcher ID
+    }
 };
 const error = (err: GeolocationPositionError) => {
     console.error(`ERROR(${err.code}): ${err.message}`);
@@ -19,7 +31,7 @@ const error = (err: GeolocationPositionError) => {
 const options = {
     enableHighAccuracy: true,
     timeout: 5000,
-    maximumAge: 0,
+    maximumAge: 200,
 };
 
 let currentMarker: google.maps.marker.AdvancedMarkerElement | null = null;
@@ -54,7 +66,7 @@ const updateUserPosition = (pos: GeolocationPosition) => {
 
 export const placePointer = (lat: number, lng: number) => {
     const center = new google.maps.LatLng(lat, lng);
-    const service = new google.maps.places.PlacesService(map);
+    const service = new google.maps.places.PlacesService(map as google.maps.Map);
 
     const request: google.maps.places.PlaceSearchRequest = {
         location: center,
