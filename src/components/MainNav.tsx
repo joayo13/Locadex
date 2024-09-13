@@ -1,12 +1,23 @@
 import React, { useEffect, useState } from 'react'
 import AnimatedLink from './AnimatedLink';
 import { useAuth } from '../contexts/AuthContext';
+import { flushSync } from 'react-dom';
+import { useNavigate } from 'react-router-dom';
 
 function MainNav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { currentUser, logout } = useAuth();
+  const navigate = useNavigate()
   function toggleMenu() {
    setMenuOpen(!menuOpen)
+  }
+  async function handleLogout() {
+    await logout()
+    document.startViewTransition(() => {
+      flushSync(() => {
+        navigate("/");
+      });
+    });
   }
   useEffect(() => {
     if (menuOpen) {
@@ -33,7 +44,7 @@ function MainNav() {
         <AnimatedLink onClick={() => setMenuOpen(false)}  to={"/location-index"} className='underline'>Location Index</AnimatedLink>
         <span className='h-px bg-stone-200 w-full'></span>
         {currentUser ? <p>Logged in as {currentUser.email}</p> : null}
-        {currentUser ? <button onClick={() => {logout(); setMenuOpen(false)}} className='underline'>Sign Out</button> : <AnimatedLink to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</AnimatedLink>}
+        {currentUser ? <button onClick={() => {handleLogout(); setMenuOpen(false)}} className='underline'>Sign Out</button> : <AnimatedLink to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</AnimatedLink>}
 
       </ul>
     </nav>

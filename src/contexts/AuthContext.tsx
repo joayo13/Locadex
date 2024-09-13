@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode, useRef } from 'react';
 import { 
   getAuth, 
   onAuthStateChanged, 
@@ -10,6 +10,7 @@ import {
   GoogleAuthProvider 
 } from 'firebase/auth';
 import { app } from '../services/firebase';
+import { useNavigate } from 'react-router-dom';
 
 // Create a context for the authentication state
 interface AuthContextType {
@@ -34,9 +35,14 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
+  const navigate = useNavigate()
+  const navigateRef = useRef(navigate)
   // Listen for changes in the authentication state
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if(user) {
+        navigateRef.current("/")
+      }
       setCurrentUser(user);
     });
     return () => unsubscribe();
