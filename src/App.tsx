@@ -25,7 +25,7 @@ import Map from "./pages/Map";
 
 //   return 2 * r * Math.asin(Math.sqrt(a));
 // }
-
+// TODO: better error handling in forms and init functions
 const App: React.FC = () => {
     return (
         <Router>
