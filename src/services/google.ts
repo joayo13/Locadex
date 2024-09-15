@@ -51,7 +51,7 @@ const updateUserPosition = (pos: GeolocationPosition) => {
     const markerContent = document.createElement('div');
     markerContent.style.width = '20px';
     markerContent.style.height = '20px';
-    markerContent.style.backgroundColor = '#4285F4'; // Blue color
+    markerContent.style.backgroundColor = '#fb923c'; // Blue color
     markerContent.style.borderRadius = '50%'; // Make it a circle
     markerContent.style.border = '2px solid white'; // Optional: add a white border
 

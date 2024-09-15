@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import AnimatedLink from '../components/AnimatedLink';
 
 function Home() {
     const [isMobileDevice, setIsMobileDevice] = useState(false);
@@ -19,9 +18,6 @@ function Home() {
         <p>Track your progress over time and keep on hunting down new locations. It's as simple as that.</p>
         <p>The Locadex features a built in map, built in GPS, locator, and an index that contains all the places you've been.</p>
         <p>Open up the app, and let it be your guide. It's an answer to the question "What should I do today?"</p>
-        <h2 className='text-3xl py-4 playfair text-stone-200'>Security is our number one priority</h2>
-        <p>We take user security very seriously, and have ensured that any location data is kept private from anyone other than you. Find more details about security and privacy here:</p>
-        <AnimatedLink to={'/security'} className='underline'>Security Details</AnimatedLink>
     </div>
   )
 }
