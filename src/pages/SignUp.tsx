@@ -10,7 +10,7 @@ function SignUp() {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('')
-    const { signup } = useAuth()
+    const { signup, googleSignIn } = useAuth()
     const navigate = useNavigate()
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -29,9 +29,19 @@ function SignUp() {
               });
             
         } catch (error) {
-            console.log(error)
+           if ( error instanceof Error) {
+            setError(error.message)
+           }
         }
     };
+    const handleGoogleSignIn = async () => {
+        await googleSignIn()
+        document.startViewTransition(() => {
+            flushSync(() => {
+              navigate("/");
+            });
+          });
+    }
 
     return (
         <div className='min-h-[calc(100vh-4rem)] bg-stone-950 flex items-center justify-center text-orange-400'>
@@ -69,6 +79,14 @@ function SignUp() {
             </div>
             <button className='bg-orange-800 w-fit text-stone-200 mx-auto px-4 py-2 rounded-sm' type="submit">
                 Sign Up
+            </button>
+            <div className='flex gap-2 items-center'>
+                <div className='h-px w-full bg-orange-400'></div>
+                <p className='text-orange-400 text-sm'>or</p>
+                <div className='h-px w-full bg-orange-400'></div>
+            </div>
+            <button type="button" onClick={() => handleGoogleSignIn()} className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm'>
+                Sign Up With Google
             </button>
             <AnimatedLink className='block underline mx-auto' to={"/sign-in"}>Already have an account?</AnimatedLink>
         </form>

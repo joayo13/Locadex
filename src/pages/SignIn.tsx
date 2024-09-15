@@ -22,9 +22,10 @@ function SignIn() {
                 });
               });
         }
-        catch(e) {
-            console.log(e)
-            setError('check console')
+        catch(error) {
+            if (error instanceof Error) {
+                setError(error.message)
+               }
         }
         
     };
@@ -56,6 +57,7 @@ function SignIn() {
                 <input
                     className='bg-stone-900 border border-orange-400 rounded-sm indent-2'
                     type="password"
+                    minLength={10}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -64,6 +66,11 @@ function SignIn() {
             <button className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm' type="submit">
                 Sign In
             </button>
+            <div className='flex gap-2 items-center'>
+                <div className='h-px w-full bg-orange-400'></div>
+                <p className='text-orange-400 text-sm'>or</p>
+                <div className='h-px w-full bg-orange-400'></div>
+            </div>
             <button type="button" onClick={() => handleGoogleSignIn()} className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm'>
                 Sign In With Google
             </button>
