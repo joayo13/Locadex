@@ -33,7 +33,7 @@ export const useAuth = () => {
 
 const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const auth = getAuth(app);
   const googleProvider = new GoogleAuthProvider();
   // Listen for changes in the authentication state
