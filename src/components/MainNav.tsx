@@ -39,21 +39,24 @@ function MainNav() {
     <nav className='bg-stone-900 shadow-lg text-stone-200 flex justify-between items-center pl-4 h-16 fixed w-full z-20'><AnimatedLink to={"/"} onClick={() => setMenuOpen(false)} className='text-xl playfair text-orange-400'>Locadex</AnimatedLink>
     <div onClick={handleOverlayClick} className={`overlay ${menuOpen ? 'animate-overlay-open' : 'animate-overlay-close'}`}></div>
     <nav aria-label='mobile-menu' className={`mobile-menu bg-stone-950 text-stone-200 p-4 ${menuOpen ? 'animate-mobile-menu-open' : 'animate-mobile-menu-close'}`}>
-      <ul className='flex flex-col items-start gap-8'>
-        <AnimatedLink onClick={() => setMenuOpen(false)} to={"/location-finder"} className='underline'>Locator</AnimatedLink>
-        <AnimatedLink onClick={() => setMenuOpen(false)}  to={"/location-index"} className='underline'>Index</AnimatedLink>
-        <AnimatedLink onClick={() => setMenuOpen(false)} to={"/map"} className='underline'>Map</AnimatedLink>
+      <div className='flex flex-col items-start gap-8'>
+        <ul className='flex flex-col items-start gap-8'>
+        <li><AnimatedLink onClick={() => setMenuOpen(false)} to={"/location-finder"} className='underline'>Locator</AnimatedLink></li>
+        <li><AnimatedLink onClick={() => setMenuOpen(false)}  to={"/location-index"} className='underline'>Index</AnimatedLink></li>
+        <li><AnimatedLink onClick={() => setMenuOpen(false)} to={"/map"} className='underline'>Map</AnimatedLink></li>
+        </ul>
         <span className='h-px bg-stone-200 w-full'></span>
         {currentUser ? <p>Logged in as {currentUser.email}</p> : null}
         {currentUser ? <button onClick={() => {handleLogout(); setMenuOpen(false)}} className='underline'>Sign Out</button> : <AnimatedLink to={'/sign-in'} onClick={() =>{ setMenuOpen(false)}} className='underline'>Sign In</AnimatedLink>}
 
-      </ul>
+      </div>
     </nav>
     <button
 					className={`hamburger hamburger--collapse ${menuOpen ? 'is-active' : ''}`}
 					onClick={toggleMenu}
 					aria-expanded={menuOpen}
 					aria-controls="mobile-menu"
+          aria-label='hamburger menu'
 				>
 					<span className="hamburger-box">
 						<span className="hamburger-inner"></span>
