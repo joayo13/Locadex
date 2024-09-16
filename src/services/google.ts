@@ -1,8 +1,9 @@
+import React from "react";
 import getLocation from "./geolocation";
 
 let map: google.maps.Map | null;
 let watcherId: number | null = null; // Store the watcher ID
-export const initMap = async () => {
+export const initMap = async (setMapLoaded: React.Dispatch<React.SetStateAction<boolean>>) => {
     let latlng = await getLocation()
     const center = new google.maps.LatLng(latlng[0], latlng[1]);
     map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
@@ -10,6 +11,10 @@ export const initMap = async () => {
         zoom: 15,
         mapId: '7c4573adc746c106',
     });
+    google.maps.event.addListenerOnce(map, 'idle', () => {
+  setMapLoaded(true)
+  // You can add any additional code here to run after the map has loaded
+});
 };
 export const initUserPosition = () => {
     if (watcherId !== null) {
