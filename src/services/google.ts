@@ -4,13 +4,21 @@ import getLocation from "./geolocation";
 let map: google.maps.Map | null;
 let watcherId: number | null = null; // Store the watcher ID
 export const initMap = async () => {
-    let latlng = await getLocation()
+    try {
+        let latlng = await getLocation()
     const center = new google.maps.LatLng(latlng[0], latlng[1]);
     map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
         center: center,
         zoom: 15,
         mapId: '7c4573adc746c106',
     });
+    }
+    catch(error) {
+        if(error instanceof Error) {
+            throw error.message
+        }
+    }
+    
 };
 export const initUserPosition = () => {
     if (watcherId !== null) {
