@@ -27,6 +27,7 @@ import LocationFinder from "./pages/LocationFinder";
 //   return 2 * r * Math.asin(Math.sqrt(a));
 // }
 // TODO: better error handling in forms and init functions
+//TODO: analyze and understand how our service worker is doing what its doing 
 const App: React.FC = () => {
     return (
         <Router>
