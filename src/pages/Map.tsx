@@ -1,15 +1,33 @@
-import { useEffect } from 'react'
-import { cleanupUserPosition, initMap, initUserPosition } from '../services/google';
+import { useEffect, useRef } from 'react'
+import { addMarker, cleanupUserPosition, initMap, initUserPosition } from '../services/google';
 
 function Map() {
+  const place = useRef<google.maps.places.PlaceResult | null>(null);
     useEffect(() => {
         initMap()
         initUserPosition()
+        loadSavedPlace()
+        addMarker(place.current?.geometry?.location ?? null)
         return() => {
           // we must remove user position marker before initing the next, else our map will not load at all
             cleanupUserPosition()
         }
     }, []);
+    function loadSavedPlace() {
+      // In case we already have a location set in local storage. We want to avoid using apis/ firebase as much as possible.
+      let savedPlace: google.maps.places.PlaceResult | null = null;
+      
+      const placeFromStorage = localStorage.getItem('place');
+      
+      if (placeFromStorage) {
+          
+          savedPlace = JSON.parse(placeFromStorage) as google.maps.places.PlaceResult | null;
+          if (savedPlace) {
+              place.current = savedPlace
+              return;
+          }
+      }
+  }
     
   return (
     <>

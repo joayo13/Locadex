@@ -67,6 +67,14 @@ const updateUserPosition = (pos: GeolocationPosition) => {
         content: markerContent,
     });
 };
+export const addMarker = (location: google.maps.LatLng | null) => {
+  if (location) {
+    new google.maps.marker.AdvancedMarkerElement({
+      position: location,
+      map: map,
+    });
+  }
+};
 
 export const generateLocation = async (
     lat: number,
