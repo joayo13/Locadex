@@ -26,6 +26,22 @@ function LocationFinder() {
             }
         }
     }
+    function removeLocation() {
+        setPlace(null)
+        localStorage.removeItem('place')
+    }
+    const selectedLocation = () => {
+        return (
+            <div className="w-full text-orange-400">
+            <p>Selected Place:</p>
+            <div className="h-px w-full bg-orange-400"></div>
+            <p className="text-stone-200">{place?.name}</p>
+            <button type="button" onClick={() => removeLocation()} className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 mt-5 rounded-sm'>
+                Remove Place
+            </button>
+            </div>
+        )
+    }
     async function getPlace() {
         const latlng = await getLocation();
         const newPlace = await generateLocation(latlng[0], latlng[1], setLoading);
@@ -37,10 +53,12 @@ function LocationFinder() {
     return (
         <div className='min-h-screen bg-stone-950 text-stone-200 px-4'>
             <h1 className='text-6xl py-4 playfair text-orange-400'>Locator</h1>
+            {/* using this empty div id=map to give init map something to attach to, we init map in generateLocation */}
             <div id="map"></div>
-            <button onClick={() => getPlace()}>getplace</button>
-            <button onClick={() => console.log(place)}>logplace</button>
-            {!loading ? <p>{place?.name ?? 'no results'}</p> : null}
+
+            {!loading && place ? selectedLocation() : null}
+            {place ? null : <button onClick={() => getPlace()}>Search</button>}
+            
         </div>
   )
 }

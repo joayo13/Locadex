@@ -9,7 +9,7 @@ export const initMap = async () => {
     const center = new google.maps.LatLng(latlng[0], latlng[1]);
     map = new google.maps.Map(document.getElementById('map') as HTMLElement, {
         center: center,
-        zoom: 15,
+        zoom: 13,
         mapId: '7c4573adc746c106',
     });
     }
@@ -21,11 +21,6 @@ export const initMap = async () => {
     
 };
 export const initUserPosition = () => {
-    if (watcherId !== null) {
-        navigator.geolocation.clearWatch(watcherId); // Clear any existing watcher
-    }
-
-    // Start watching the user's position
     watcherId = navigator.geolocation.watchPosition(updateUserPosition, error, options);
 };
 export const cleanupUserPosition = () => {
@@ -40,7 +35,7 @@ const error = (err: GeolocationPositionError) => {
 const options = {
     enableHighAccuracy: true,
     timeout: 5000,
-    maximumAge: 200,
+    maximumAge: 1000,
 };
 
 let currentMarker: google.maps.marker.AdvancedMarkerElement | null = null;
@@ -78,7 +73,8 @@ export const generateLocation = async (
     lng: number,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
   ): Promise<google.maps.places.PlaceResult | null> => {
-        await initMap();
+
+    await initMap();
      // Assuming this initializes the map
     const center = new google.maps.LatLng(lat, lng);
     const service = new google.maps.places.PlacesService(map as google.maps.Map);
