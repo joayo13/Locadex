@@ -1,7 +1,7 @@
 
 import getLocation from "./geolocation";
 
-let map: google.maps.Map | null;
+let map: google.maps.Map | null = null;
 let watcherId: number | null = null; // Store the watcher ID
 export const initMap = async () => {
     try {
@@ -76,27 +76,45 @@ const updateUserPosition = (pos: GeolocationPosition) => {
 export const generateLocation = async (
     lat: number,
     lng: number,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
   ): Promise<google.maps.places.PlaceResult | null> => {
-    await initMap(); // Assuming this initializes the map
+        await initMap();
+     // Assuming this initializes the map
     const center = new google.maps.LatLng(lat, lng);
     const service = new google.maps.places.PlacesService(map as google.maps.Map);
   
-    const request: google.maps.places.PlaceSearchRequest = {
+    const touristAttractionRequest: google.maps.places.PlaceSearchRequest = {
       location: center,
-      radius: 1000,
+      radius: 10000,
       type: 'tourist_attraction',
       language: 'en-US',
     };
+    const parkRequest: google.maps.places.PlaceSearchRequest = {
+        location: center,
+        radius: 10000,
+        type: 'park',
+        language: 'en-US',
+      };
   
-    return new Promise((resolve, reject) => {
-      service.nearbySearch(request, (results, status) => {
-        if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
-          const placeResult = results[0]; // Get the first result
-          resolve(placeResult); // Resolve the promise with the place result
-        } else {
-          console.log('No places found');
-          resolve(null); // Resolve with null if no places found
-        }
+      return new Promise((resolve, reject) => {
+        service.nearbySearch(touristAttractionRequest, (results, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
+            const filtered = results.filter((x) => (x.user_ratings_total ?? 0) > 100);
+            setLoading(false);
+            resolve(filtered[Math.floor(Math.random() * filtered.length)]); // Resolve with the best tourist attraction
+          } else {
+            // If no tourist attraction found, search for parks
+            service.nearbySearch(parkRequest, (results, status) => {
+              if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
+                const filtered = results.filter((x) => (x.user_ratings_total ?? 0) > 100);
+            setLoading(false);
+            resolve(filtered[Math.floor(Math.random() * filtered.length)]); // Resolve with the best tourist attraction
+              } else {
+                setLoading(false);
+                resolve(null); // Resolve with null if neither found
+              }
+            });
+          }
+        });
       });
-    });
-  };
+    }
