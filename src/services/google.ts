@@ -73,30 +73,30 @@ const updateUserPosition = (pos: GeolocationPosition) => {
     });
 };
 
-export const placePointer = (lat: number, lng: number) => {
+export const generateLocation = async (
+    lat: number,
+    lng: number,
+  ): Promise<google.maps.places.PlaceResult | null> => {
+    await initMap(); // Assuming this initializes the map
     const center = new google.maps.LatLng(lat, lng);
     const service = new google.maps.places.PlacesService(map as google.maps.Map);
-
+  
     const request: google.maps.places.PlaceSearchRequest = {
-        location: center,
-        radius: 1000,
-        type: 'tourist_attraction',
-        language: 'en-US',
+      location: center,
+      radius: 1000,
+      type: 'tourist_attraction',
+      language: 'en-US',
     };
-
-    service.nearbySearch(request, (results, status) => {
+  
+    return new Promise((resolve, reject) => {
+      service.nearbySearch(request, (results, status) => {
         if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
-            const place = results[0]; // Get the first result, todo: we'll check if user has already captured this result before
-            console.log(place);
-
-            // Create a marker for the place
-            new google.maps.marker.AdvancedMarkerElement({
-                position: place.geometry?.location!,
-                map: map,
-                title: place.name,
-            });
+          const placeResult = results[0]; // Get the first result
+          resolve(placeResult); // Resolve the promise with the place result
         } else {
-            console.log('No places found');
+          console.log('No places found');
+          resolve(null); // Resolve with null if no places found
         }
+      });
     });
-}
+  };
