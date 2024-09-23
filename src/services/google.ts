@@ -68,10 +68,12 @@ const updateUserPosition = (pos: GeolocationPosition) => {
     });
 };
 export const addMarker = (location: google.maps.LatLng | null) => {
-  if (location) {
+  if (location && map) {
     new google.maps.marker.AdvancedMarkerElement({
       position: location,
       map: map,
+      title: 'test',
+      content: null,
     });
   }
 };
@@ -83,7 +85,6 @@ export const generateLocation = async (
   ): Promise<google.maps.places.PlaceResult | null> => {
 
     await initMap();
-     // Assuming this initializes the map
     const center = new google.maps.LatLng(lat, lng);
     const service = new google.maps.places.PlacesService(map as google.maps.Map);
   
@@ -115,6 +116,7 @@ export const generateLocation = async (
             resolve(filtered[Math.floor(Math.random() * filtered.length)]); // Resolve with the best tourist attraction
               } else {
                 setLoading(false);
+                console.error('no results found')
                 resolve(null); // Resolve with null if neither found
               }
             });
