@@ -10,6 +10,32 @@ function LocationFinder() {
         loadSavedPlace()
     },[])
 
+    async function getDistanceFromLatLonInKm() {
+        const location = place?.geometry?.location
+        console.log(location)
+        const lat1 = location?.lat ?? 0
+        const lon1 = location?.lng ?? 0
+        const userLatLon = await getLocation()
+        const lat2 = userLatLon[0] ?? 0
+        const lon2 = userLatLon[1] ?? 0
+        var R = 6371; // Radius of the earth in km
+        var dLat = deg2rad(lat2-(lat1 as number));  // deg2rad below
+        var dLon = deg2rad(lon2-(lon1 as number)); 
+        var a = 
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(lat1 as number)) * Math.cos(deg2rad(lat2)) * 
+          Math.sin(dLon/2) * Math.sin(dLon/2)
+          ; 
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+        var d = R * c; // Distance in km
+        console.log(d)
+        return d;
+      }
+      
+      function deg2rad(deg: number) {
+        return deg * (Math.PI/180)
+      }
+
     function loadSavedPlace() {
         // In case we already have a location set in local storage. We want to avoid using apis/ firebase as much as possible.
         let savedPlace: google.maps.places.PlaceResult | null = null;
@@ -58,7 +84,7 @@ function LocationFinder() {
 
             {!loading && place ? selectedLocation() : null}
             {place ? null : <button onClick={() => getPlace()}>Search</button>}
-            
+            <button onClick={() => {getDistanceFromLatLonInKm()}}>Distance</button>
         </div>
   )
 }
