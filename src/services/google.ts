@@ -90,13 +90,13 @@ export const generateLocation = async (
   
     const touristAttractionRequest: google.maps.places.PlaceSearchRequest = {
       location: center,
-      radius: 10000,
+      radius: 500,
       type: 'tourist_attraction',
       language: 'en-US',
     };
     const parkRequest: google.maps.places.PlaceSearchRequest = {
         location: center,
-        radius: 10000,
+        radius: 500,
         type: 'park',
         language: 'en-US',
       };

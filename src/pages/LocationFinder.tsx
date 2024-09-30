@@ -6,9 +6,20 @@ import { generateLocation } from "../services/google";
 function LocationFinder() {
     const [place, setPlace] = useState<google.maps.places.PlaceResult | null>(null);
     const [loading, setLoading] = useState(true)
+    const [placeCaptured, setPlaceCaptured] = useState(false)
     useEffect(() => {
         loadSavedPlace()
     },[])
+
+    async function capturePlace() {
+        const d = await getDistanceFromLatLonInKm()
+        if(d < 0.5) {
+            setPlaceCaptured(true)
+        }
+        else {
+            alert('place too far away')
+        }
+    }
 
     async function getDistanceFromLatLonInKm() {
         const location = place?.geometry?.location
@@ -28,7 +39,7 @@ function LocationFinder() {
           ; 
         var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
         var d = R * c; // Distance in km
-        console.log(d)
+        console.log(d as number)
         return d;
       }
       
@@ -84,7 +95,8 @@ function LocationFinder() {
 
             {!loading && place ? selectedLocation() : null}
             {place ? null : <button onClick={() => getPlace()}>Search</button>}
-            <button onClick={() => {getDistanceFromLatLonInKm()}}>Distance</button>
+            <button onClick={() => {capturePlace()}}>Distance</button>
+            <p>{placeCaptured ? 'place captured': null}</p>
         </div>
   )
 }
