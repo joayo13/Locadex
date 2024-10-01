@@ -82,10 +82,9 @@ function LocationFinder() {
     async function getPlace() {
         const latlng = await getLocation();
         const newPlace = await generateLocation(latlng[0], latlng[1], setLoading);
-        setPlace(newPlace);
-        
         // Store new place in localStorage
         localStorage.setItem('place', JSON.stringify(newPlace));
+        loadSavedPlace()
     }
     return (
         <div className='min-h-screen bg-stone-950 text-stone-200 px-4'>
@@ -96,7 +95,7 @@ function LocationFinder() {
             {!loading && place ? selectedLocation() : null}
             {place ? null : <button onClick={() => getPlace()}>Search</button>}
             <button onClick={() => {capturePlace()}}>Distance</button>
-            <p>{placeCaptured ? 'place captured': null}</p>
+            <p>{placeCaptured ? 'place captured' : null}</p>
         </div>
   )
 }
