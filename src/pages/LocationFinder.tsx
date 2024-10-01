@@ -1,23 +1,53 @@
 import { useEffect, useState } from "react";
 import getLocation from "../services/geolocation";
 import { generateLocation } from "../services/google";
+import { useAuth } from "../contexts/AuthContext";
+import { updateDoc, getDoc, doc, setDoc } from "firebase/firestore";
+import { db } from "../services/firebase";
 
 
 function LocationFinder() {
     const [place, setPlace] = useState<google.maps.places.PlaceResult | null>(null);
     const [loading, setLoading] = useState(true)
     const [placeCaptured, setPlaceCaptured] = useState(false)
+    const { currentUser } = useAuth()
     useEffect(() => {
         loadSavedPlace()
     },[])
 
     async function capturePlace() {
-        const d = await getDistanceFromLatLonInKm()
-        if(d < 0.5) {
-            setPlaceCaptured(true)
-        }
-        else {
-            alert('place too far away')
+        const d = await getDistanceFromLatLonInKm();
+        if (d < 0.5) {
+            if (currentUser) {
+                const userDocRef = doc(db, "users", currentUser.uid);
+    
+                // Get the current array of places
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists()) {
+                    const currentPlaces = userDocSnap.data().places || [];
+    
+                    // Append the new place name if it's not already in the array
+                    if (!currentPlaces.includes(place?.name)) {
+                        const updatedPlaces = [...currentPlaces, place?.name];
+    
+                        // Update the user's document with the new places array
+                        await updateDoc(userDocRef, { places: updatedPlaces });
+                        setPlaceCaptured(true);
+                    } else {
+                        console.log("Place is already captured.");
+                    }
+                } else {
+                    // If no document exists, create it with the initial array
+                    await setDoc(userDocRef, {
+                        places: [place?.name],
+                    });
+                    setPlaceCaptured(true);
+                }
+            } else {
+                console.error("No user is logged in.");
+            }
+        } else {
+            alert("Place too far away.");
         }
     }
 
