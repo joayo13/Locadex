@@ -90,13 +90,13 @@ export const generateLocation = async (
   
     const touristAttractionRequest: google.maps.places.PlaceSearchRequest = {
       location: center,
-      radius: 500,
+      radius: 10000,
       type: 'tourist_attraction',
       language: 'en-US',
     };
     const parkRequest: google.maps.places.PlaceSearchRequest = {
         location: center,
-        radius: 500,
+        radius: 10000,
         type: 'park',
         language: 'en-US',
       };
@@ -116,7 +116,6 @@ export const generateLocation = async (
             resolve(filtered[Math.floor(Math.random() * filtered.length)]); // Resolve with the best tourist attraction
               } else {
                 setLoading(false);
-                console.error('no results found')
                 resolve(null); // Resolve with null if neither found
               }
             });

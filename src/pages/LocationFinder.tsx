@@ -4,6 +4,7 @@ import { generateLocation } from "../services/google";
 import { useAuth } from "../contexts/AuthContext";
 import { updateDoc, getDoc, doc, setDoc } from "firebase/firestore";
 import { db } from "../services/firebase";
+import { useError } from "../contexts/ErrorContext";
 
 
 function LocationFinder() {
@@ -11,6 +12,7 @@ function LocationFinder() {
     const [loading, setLoading] = useState(true)
     const [placeCaptured, setPlaceCaptured] = useState(false)
     const { currentUser } = useAuth()
+    const { setError } = useError()
     useEffect(() => {
         loadSavedPlace()
     },[])
@@ -44,10 +46,10 @@ function LocationFinder() {
                     setPlaceCaptured(true);
                 }
             } else {
-                console.error("No user is logged in.");
+                setError("No User Logged In")
             }
         } else {
-            alert("Place too far away.");
+            setError("Place is too far away. Get closer and try again.");
         }
     }
 

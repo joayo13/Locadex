@@ -4,15 +4,15 @@ import AnimatedLink from '../components/AnimatedLink';
 import { useAuth } from '../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { flushSync } from 'react-dom';
+import { useError } from '../contexts/ErrorContext';
 
 function SignUp() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('')
     const { signup, googleSignIn } = useAuth()
     const navigate = useNavigate()
-
+    const {setError} = useError()
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log(event);
@@ -46,7 +46,6 @@ function SignUp() {
     return (
         <div className='min-h-[calc(100vh-4rem)] bg-stone-950 flex items-center justify-center text-orange-400'>
         <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-        <div className='w-44 text-red-400'>{error}</div>
             <div>
                 <label className='block'>Email</label>
                 <input

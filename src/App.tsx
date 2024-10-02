@@ -15,6 +15,8 @@ import AuthProvider from './contexts/AuthContext';
 import PrivateRoute from "./components/PrivateRoute";
 import Map from "./pages/Map";
 import LocationFinder from "./pages/LocationFinder";
+import GlobalErrorNotification from "./components/GlobalErrorNotification";
+import { ErrorProvider } from "./contexts/ErrorContext";
 //TODO: Implement this haversine equation for checking distance between lat longs
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -31,8 +33,10 @@ import LocationFinder from "./pages/LocationFinder";
 const App: React.FC = () => {
     return (
         <Router>
+            <ErrorProvider>
             <AuthProvider>
             <MainNav/>
+            <GlobalErrorNotification/>
             <Routes>
                 <Route path='/' element={<Home />} />
                 <Route path='/sign-in' element={<SignIn />} />
@@ -43,6 +47,7 @@ const App: React.FC = () => {
                 <Route path="*" element={<NotFound />} />
             </Routes>
             </AuthProvider>
+            </ErrorProvider>
         </Router>
         // <div className='bg-neutral-900 text-neutral-200 px-2'>
         //     <MainNav user={user} setSignInFormVisible={setSignInFormVisible} signInFormVisible={signInFormVisible} />
