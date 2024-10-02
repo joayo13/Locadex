@@ -15,7 +15,7 @@ export const initMap = async () => {
     }
     catch(error) {
         if(error instanceof Error) {
-            throw error.message
+            throw error
         }
     }
     
@@ -30,7 +30,7 @@ export const cleanupUserPosition = () => {
     }
 };
 const error = (err: GeolocationPositionError) => {
-    console.error(`ERROR(${err.code}): ${err.message}`);
+    throw err
 };
 const options = {
     enableHighAccuracy: true,
@@ -79,47 +79,52 @@ export const addMarker = (location: google.maps.LatLng | null) => {
 };
 
 export const generateLocation = async (
-    lat: number,
-    lng: number,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>
-  ): Promise<google.maps.places.PlaceResult | null> => {
+  lat: number,
+  lng: number,
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>
+): Promise<google.maps.places.PlaceResult | null> => {
+  await initMap();
+  const center = new google.maps.LatLng(lat, lng);
+  const service = new google.maps.places.PlacesService(map as google.maps.Map);
 
-    await initMap();
-    const center = new google.maps.LatLng(lat, lng);
-    const service = new google.maps.places.PlacesService(map as google.maps.Map);
-  
-    const touristAttractionRequest: google.maps.places.PlaceSearchRequest = {
+  const touristAttractionRequest: google.maps.places.PlaceSearchRequest = {
       location: center,
       radius: 10000,
       type: 'tourist_attraction',
       language: 'en-US',
-    };
-    const parkRequest: google.maps.places.PlaceSearchRequest = {
-        location: center,
-        radius: 10000,
-        type: 'park',
-        language: 'en-US',
-      };
-  
-      return new Promise((resolve, reject) => {
-        service.nearbySearch(touristAttractionRequest, (results, status) => {
+  };
+
+  const parkRequest: google.maps.places.PlaceSearchRequest = {
+      location: center,
+      radius: 10000,
+      type: 'park',
+      language: 'en-US',
+  };
+
+  return new Promise((resolve, reject) => {
+      service.nearbySearch(touristAttractionRequest, (results, status) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
-            const filtered = results.filter((x) => (x.user_ratings_total ?? 0) > 100);
-            setLoading(false);
-            resolve(filtered[Math.floor(Math.random() * filtered.length)]); // Resolve with the best tourist attraction
+              const filtered = results.filter((x) => (x.user_ratings_total ?? 0) > 100);
+              setLoading(false);
+              resolve(filtered[Math.floor(Math.random() * filtered.length)]); // Resolve with the best tourist attraction
+          } else if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
+              // If no tourist attraction found, search for parks
+              service.nearbySearch(parkRequest, (results, status) => {
+                  if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
+                      const filtered = results.filter((x) => (x.user_ratings_total ?? 0) > 100);
+                      setLoading(false);
+                      resolve(filtered[Math.floor(Math.random() * filtered.length)]); // Resolve with the best park
+                  } else {
+                      setLoading(false);
+                      // Reject if no parks found
+                      reject(new Error("No tourist attractions or parks found near the specified location."));
+                  }
+              });
           } else {
-            // If no tourist attraction found, search for parks
-            service.nearbySearch(parkRequest, (results, status) => {
-              if (status === google.maps.places.PlacesServiceStatus.OK && results && results.length > 0) {
-                const filtered = results.filter((x) => (x.user_ratings_total ?? 0) > 100);
-            setLoading(false);
-            resolve(filtered[Math.floor(Math.random() * filtered.length)]); // Resolve with the best tourist attraction
-              } else {
-                setLoading(false);
-                resolve(null); // Resolve with null if neither found
-              }
-            });
+              // Reject with an error if the Places API call fails for any reason
+              setLoading(false);
+              reject(new Error("Failed to fetch tourist attractions: " + status));
           }
-        });
       });
-    }
+  });
+};

@@ -18,66 +18,85 @@ function LocationFinder() {
     },[])
 
     async function capturePlace() {
-        const d = await getDistanceFromLatLonInKm();
-        if (d < 0.5) {
-            if (currentUser) {
-                const userDocRef = doc(db, "users", currentUser.uid);
+        try {
+            const d = await getDistanceFromLatLonInKm(); // Get distance
+            if (d !== undefined && d < 0.5) {
+                if (currentUser) {
+                    const userDocRef = doc(db, "users", currentUser.uid);
     
-                // Get the current array of places
-                const userDocSnap = await getDoc(userDocRef);
-                if (userDocSnap.exists()) {
-                    const currentPlaces = userDocSnap.data().places || [];
+                    // Get the current array of places
+                    const userDocSnap = await getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                        const currentPlaces = userDocSnap.data().places || [];
     
-                    // Append the new place name if it's not already in the array
-                    if (!currentPlaces.includes(place?.name)) {
-                        const updatedPlaces = [...currentPlaces, place?.name];
+                        // Append the new place name if it's not already in the array
+                        if (!currentPlaces.includes(place?.name)) {
+                            const updatedPlaces = [...currentPlaces, place?.name];
     
-                        // Update the user's document with the new places array
-                        await updateDoc(userDocRef, { places: updatedPlaces });
-                        setPlaceCaptured(true);
+                            // Update the user's document with the new places array
+                            await updateDoc(userDocRef, { places: updatedPlaces });
+                            setPlaceCaptured(true);
+                        } else {
+                            console.log("Place is already captured.");
+                        }
                     } else {
-                        console.log("Place is already captured.");
+                        // If no document exists, create it with the initial array
+                        await setDoc(userDocRef, {
+                            places: [place?.name],
+                        });
+                        setPlaceCaptured(true);
                     }
                 } else {
-                    // If no document exists, create it with the initial array
-                    await setDoc(userDocRef, {
-                        places: [place?.name],
-                    });
-                    setPlaceCaptured(true);
+                    setError("No User Logged In");
                 }
             } else {
-                setError("No User Logged In")
+                setError("Place is too far away. Get closer and try again.");
             }
-        } else {
-            setError("Place is too far away. Get closer and try again.");
+        } catch (error) {
+            // Handle errors here
+            console.error("An error occurred while capturing the place:", error);
+            setError("An error occurred while capturing the place. Please try again.");
         }
     }
 
     async function getDistanceFromLatLonInKm() {
-        const location = place?.geometry?.location
-        console.log(location)
-        const lat1 = location?.lat ?? 0
-        const lon1 = location?.lng ?? 0
-        const userLatLon = await getLocation()
-        const lat2 = userLatLon[0] ?? 0
-        const lon2 = userLatLon[1] ?? 0
-        var R = 6371; // Radius of the earth in km
-        var dLat = deg2rad(lat2-(lat1 as number));  // deg2rad below
-        var dLon = deg2rad(lon2-(lon1 as number)); 
-        var a = 
-          Math.sin(dLat/2) * Math.sin(dLat/2) +
-          Math.cos(deg2rad(lat1 as number)) * Math.cos(deg2rad(lat2)) * 
-          Math.sin(dLon/2) * Math.sin(dLon/2)
-          ; 
-        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-        var d = R * c; // Distance in km
-        console.log(d as number)
-        return d;
-      }
-      
-      function deg2rad(deg: number) {
-        return deg * (Math.PI/180)
-      }
+        try {
+            const location = place?.geometry?.location;
+            console.log(location);
+            
+            const lat1 = location?.lat ?? 0;
+            const lon1 = location?.lng ?? 0;
+    
+            // Get user's latitude and longitude
+            const userLatLon = await getLocation(); // This can throw an error
+            const lat2 = userLatLon[0] ?? 0;
+            const lon2 = userLatLon[1] ?? 0;
+    
+            const R = 6371; // Radius of the earth in km
+            const dLat = deg2rad(lat2 - (lat1 as number));  // deg2rad below
+            const dLon = deg2rad(lon2 - (lon1 as number)); 
+            
+            const a = 
+                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(deg2rad(lat1 as number)) * Math.cos(deg2rad(lat2)) * 
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+            const d = R * c; // Distance in km
+            console.log(d);
+            
+            return d;
+        } catch (error) {
+            if(error instanceof Error) {
+                setError(error.message)
+            }
+            
+        }
+    }
+    
+    function deg2rad(deg: number) {
+        return deg * (Math.PI / 180);
+    }
 
     function loadSavedPlace() {
         // In case we already have a location set in local storage. We want to avoid using apis/ firebase as much as possible.

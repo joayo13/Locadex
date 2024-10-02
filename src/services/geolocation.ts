@@ -9,26 +9,28 @@ const getLocation = (): Promise<[number, number]> => {
                     ]);
                 },
                 (error) => {
-                    reject(showError(error));
+                    // Pass a specific error message to the caller
+                    reject(new Error(getGeolocationErrorMessage(error)));
                 }
             );
         } else {
+            // Reject with an error if geolocation is not supported
             reject(new Error('Geolocation not supported by this browser.'));
         }
     });
 };
 
-const showError = (error: GeolocationPositionError) => {
+// Function to get human-readable error messages
+const getGeolocationErrorMessage = (error: GeolocationPositionError): string => {
     switch (error.code) {
         case error.PERMISSION_DENIED:
-            console.error('User denied the request for Geolocation.');
-            break;
+            return 'User denied the request for Geolocation.';
         case error.POSITION_UNAVAILABLE:
-            console.error('Location information unavailable.');
-            break;
+            return 'Location information is unavailable.';
         case error.TIMEOUT:
-            console.error('Location request timeout.');
-            break;
+            return 'The request to get user location timed out.';
+        default:
+            return 'An unknown error occurred.';
     }
 };
 

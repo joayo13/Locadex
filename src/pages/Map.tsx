@@ -37,7 +37,7 @@ function Map() {
     <>
     {/* the -4rem is to account for navbar */}
     
-    {<div id="map" style={{ height: 'calc(100vh - 4rem)', width: '100vw' }}></div>}
+    <div id="map" style={{ height: 'calc(100vh - 4rem)', width: '100vw' }}></div>
     </>
   )
 }
