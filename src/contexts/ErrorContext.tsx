@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 type ErrorContextType = {
   error: string | null;
@@ -17,11 +17,6 @@ export const useError = () => {
 
 export const ErrorProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
-    if(error) {
-        setTimeout(() => {setError(null)},2000)
-    }
-  },[error])
   return (
     <ErrorContext.Provider value={{ error, setError }}>
       {children}

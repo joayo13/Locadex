@@ -22,6 +22,16 @@
     opacity: 0;
 	pointer-events: none;
 }
+.error {
+  transition: all 0.25s ease;
+  opacity: 0;
+}
+.animate-error-in {
+  opacity: 1;
+}
+.animate-error-out {
+  opacity: 0;
+}
 .mobile-menu {
 	display: block;
 	position: fixed;

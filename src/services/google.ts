@@ -21,6 +21,7 @@ export const initMap = async () => {
     
 };
 export const initUserPosition = () => {
+    cleanupUserPosition()
     watcherId = navigator.geolocation.watchPosition(updateUserPosition, error, options);
 };
 export const cleanupUserPosition = () => {
