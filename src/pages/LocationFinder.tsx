@@ -9,7 +9,7 @@ import { useError } from "../contexts/ErrorContext";
 
 function LocationFinder() {
     const [place, setPlace] = useState<google.maps.places.PlaceResult | null>(null);
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(false)
     const [placeCaptured, setPlaceCaptured] = useState(false)
     const { currentUser } = useAuth()
     const { setError } = useError()
@@ -123,14 +123,20 @@ function LocationFinder() {
             <div className="w-full text-orange-400">
             <p>Selected Place:</p>
             <div className="h-px w-full bg-orange-400"></div>
-            <p className="text-stone-200">{place?.name}</p>
-            <button type="button" onClick={() => removeLocation()} className='bg-orange-800 w-fit mx-auto text-stone-200 px-4 py-2 mt-5 rounded-sm'>
-                Remove Place
-            </button>
+            <p className="text-stone-200">{place?.name ?? 'None'}</p>
+            <div className="absolute flex w-screen h-screen top-0 left-0 justify-center items-center">
+            <div onClick={() => removeLocation()} className='bg-orange-800 justify-center items-center flex bg-opacity-30 text-orange-400 w-48 h-48 rounded-full'>
+            <div onClick={() => getPlace()} className={`${place ? 'transition-locator-btn-dark-orange' : 'transition-locator-btn-orange'} transition-locator-btn absolute flex items-center justify-center rounded-full z-10 h-0 w-0 bg-orange-400 overflow-hidden text-nowrap`}>
+                <p className="text-black">{loading ? 'Loading...' : 'Search Place'}</p>
+            </div>
+                <p>Remove Place</p>
+            </div>
+            </div>
             </div>
         )
     }
     async function getPlace() {
+        setLoading(true);
         const latlng = await getLocation();
         const newPlace = await generateLocation(latlng[0], latlng[1], setLoading);
         // Store new place in localStorage
@@ -143,10 +149,8 @@ function LocationFinder() {
             {/* using this empty div id=map to give init map something to attach to, we init map in generateLocation */}
             <div id="map"></div>
 
-            {!loading && place ? selectedLocation() : null}
-            {place ? null : <button onClick={() => getPlace()}>Search</button>}
-            <button onClick={() => {capturePlace()}}>Distance</button>
-            <p>{placeCaptured ? 'place captured' : null}</p>
+            {selectedLocation()}
+            <p onClick={() => capturePlace()}>{placeCaptured ? 'captured' : 'not captured'}</p>
         </div>
   )
 }

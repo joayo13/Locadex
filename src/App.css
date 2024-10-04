@@ -14,6 +14,17 @@
 	transition-delay: 250ms;
     opacity: 0;
 }
+.transition-locator-btn {
+  transition: all 0.5s ease;
+}
+.transition-locator-btn-dark-orange {
+  height: 0rem;
+  width: 0rem;
+}
+.transition-locator-btn-orange {
+  height: 12rem;
+  width: 12rem;
+}
 .animate-overlay-open {
     opacity: 1;
 	pointer-events: auto; 
@@ -350,5 +361,15 @@
       transform-origin: top left;
       top: 0;
       left: 0;
+    }
+  }
+  @keyframes expand-btn {
+    0% {
+      height: 0rem;
+      width: 0rem;
+    }
+    100% {
+      height: 12rem;
+      width: 12rem;
     }
   }
