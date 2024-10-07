@@ -19,7 +19,7 @@ function LocationFinder() {
 
     async function capturePlace() {
         try {
-            const d = await getDistanceFromLatLonInKm(); // Get distance
+            const d = await getDistanceFromLatLonInKm(await getLocation(), [place?.geometry?.location?.lat() as number, place?.geometry?.location?.lng() as number]); // Get distance
             if (d !== undefined && d < 0.5) {
                 if (currentUser) {
                     const userDocRef = doc(db, "users", currentUser.uid);
@@ -59,16 +59,13 @@ function LocationFinder() {
         }
     }
 
-    async function getDistanceFromLatLonInKm() {
+    async function getDistanceFromLatLonInKm(userLatLon: [number, number], placeLatLon: [number, number]) {
         try {
-            const location = place?.geometry?.location;
-            console.log(location);
             
-            const lat1 = location?.lat ?? 0;
-            const lon1 = location?.lng ?? 0;
+            const lat1 = placeLatLon[0] ?? 0;
+            const lon1 = placeLatLon[1] ?? 0;
     
             // Get user's latitude and longitude
-            const userLatLon = await getLocation(); // This can throw an error
             const lat2 = userLatLon[0] ?? 0;
             const lon2 = userLatLon[1] ?? 0;
     

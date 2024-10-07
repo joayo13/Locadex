@@ -1,6 +1,7 @@
 
 import getLocation from "./geolocation";
 
+
 let map: google.maps.Map | null = null;
 let watcherId: number | null = null; // Store the watcher ID
 export const initMap = async () => {
