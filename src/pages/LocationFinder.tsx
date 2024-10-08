@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import getLocation from "../services/geolocation";
+import { getLocation, getDistanceFromLatLonInKm } from "../services/geolocation";
 import { generateLocation } from "../services/google";
 import { useAuth } from "../contexts/AuthContext";
 import { updateDoc, getDoc, doc, setDoc } from "firebase/firestore";
@@ -19,7 +19,12 @@ function LocationFinder() {
 
     async function capturePlace() {
         try {
-            const d = await getDistanceFromLatLonInKm(await getLocation(), [place?.geometry?.location?.lat() as number, place?.geometry?.location?.lng() as number]); // Get distance
+            //
+            const location = place?.geometry?.location;
+            const lat1 = Number(location?.lat) ?? 0;
+            const lon1 = Number(location?.lng) ?? 0;
+            const [lat2, lon2] = await getLocation()
+            const d = await getDistanceFromLatLonInKm([lat2, lon2], [lat1, lon1]); // Get distance
             if (d !== undefined && d < 0.5) {
                 if (currentUser) {
                     const userDocRef = doc(db, "users", currentUser.uid);
@@ -55,44 +60,12 @@ function LocationFinder() {
         } catch (error) {
             // Handle errors here
             console.error("An error occurred while capturing the place:", error);
-            setError("An error occurred while capturing the place. Please try again.");
-        }
-    }
-
-    async function getDistanceFromLatLonInKm(userLatLon: [number, number], placeLatLon: [number, number]) {
-        try {
-            
-            const lat1 = placeLatLon[0] ?? 0;
-            const lon1 = placeLatLon[1] ?? 0;
-    
-            // Get user's latitude and longitude
-            const lat2 = userLatLon[0] ?? 0;
-            const lon2 = userLatLon[1] ?? 0;
-    
-            const R = 6371; // Radius of the earth in km
-            const dLat = deg2rad(lat2 - (lat1 as number));  // deg2rad below
-            const dLon = deg2rad(lon2 - (lon1 as number)); 
-            
-            const a = 
-                Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-                Math.cos(deg2rad(lat1 as number)) * Math.cos(deg2rad(lat2)) * 
-                Math.sin(dLon / 2) * Math.sin(dLon / 2);
-            
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
-            const d = R * c; // Distance in km
-            console.log(d);
-            
-            return d;
-        } catch (error) {
             if(error instanceof Error) {
                 setError(error.message)
+                return
             }
-            
+            setError("An error occurred while capturing the place. Please try again.");
         }
-    }
-    
-    function deg2rad(deg: number) {
-        return deg * (Math.PI / 180);
     }
 
     function loadSavedPlace() {
@@ -147,7 +120,7 @@ function LocationFinder() {
             <div id="map"></div>
 
             {selectedLocation()}
-            <p onClick={() => capturePlace()}>{placeCaptured ? 'captured' : 'not captured'}</p>
+            <button className=" cursor-pointer absolute bg-red-400" onClick={() => {capturePlace(); console.log('fuck')}}>{placeCaptured ? 'captured' : 'not captured'}</button>
         </div>
   )
 }

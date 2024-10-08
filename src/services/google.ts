@@ -1,5 +1,5 @@
 
-import getLocation from "./geolocation";
+import { getLocation } from "./geolocation";
 
 
 let map: google.maps.Map | null = null;

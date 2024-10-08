@@ -1,4 +1,4 @@
-const getLocation = (): Promise<[number, number]> => {
+export const getLocation = (): Promise<[number, number]> => {
     return new Promise((resolve, reject) => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -20,6 +20,30 @@ const getLocation = (): Promise<[number, number]> => {
     });
 };
 
+const EARTH_RADIUS_KM = 6371;
+
+export function getDistanceFromLatLonInKm(userLatLon: [number, number] = [0, 0], placeLatLon: [number, number] = [0, 0]) {
+    const [lat1, lon1] = placeLatLon;
+    const [lat2, lon2] = userLatLon;
+    
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    
+    const a = 
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+    const distance = EARTH_RADIUS_KM * c;
+    console.log(distance)
+    return(distance)
+}
+
+function deg2rad(deg: number) {
+    return deg * (Math.PI / 180);
+}
+
 // Function to get human-readable error messages
 const getGeolocationErrorMessage = (error: GeolocationPositionError): string => {
     switch (error.code) {
@@ -33,5 +57,3 @@ const getGeolocationErrorMessage = (error: GeolocationPositionError): string => 
             return 'An unknown error occurred.';
     }
 };
-
-export default getLocation;
