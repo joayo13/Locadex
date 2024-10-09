@@ -13,22 +13,28 @@ function LocationFinder() {
     const [placeCaptured, setPlaceCaptured] = useState(false)
     const { currentUser } = useAuth()
     const { setError } = useError()
+    const [distance, setDistance] = useState(0)
     useEffect(() => {
         loadSavedPlace()
     },[])
+    useEffect(() => {
+        async function getDistanceFromLatLon() {
+            const location = place?.geometry?.location;
+            const lat1 = Number(location?.lat) ?? 0;
+            const lon1 = Number(location?.lng) ?? 0;
+            const [lat2, lon2] = await getLocation()
+            setDistance(getDistanceFromLatLonInKm([lat2, lon2], [lat1, lon1]));
+        }
+        if(place?.geometry?.location) {
+            getDistanceFromLatLon()
+        }
+    },[place])
 
-    async function getDistanceFromLatLon() {
-        const location = place?.geometry?.location;
-        const lat1 = Number(location?.lat) ?? 0;
-        const lon1 = Number(location?.lng) ?? 0;
-        const [lat2, lon2] = await getLocation()
-        const d = await getDistanceFromLatLonInKm([lat2, lon2], [lat1, lon1]); // Get distance
-        return d;
-    }
+    
     async function capturePlace() {
         try {
-            const d = await getDistanceFromLatLon()
-            if (d !== undefined && d < 0.5) {
+            const d = distance
+            if (d !== 0 && d < 0.5) {
                 if (currentUser) {
                     const userDocRef = doc(db, "users", currentUser.uid);
     
@@ -89,6 +95,7 @@ function LocationFinder() {
     }
     function removeLocation() {
         setPlace(null)
+        setDistance(0)
         localStorage.removeItem('place')
     }
     const selectedLocation = () => {
@@ -102,7 +109,7 @@ function LocationFinder() {
             <p className="text-stone-200">{place?.rating ? `${place?.rating?.toString()} (${place?.user_ratings_total?.toString()} Reviews)` : 'N/A'}</p>
             <p>Distance:</p>
             <div className="h-px w-full bg-orange-400"></div>
-            <p className="text-stone-200">{'N/A'}</p>
+            <p className="text-stone-200">{distance ? `${distance.toFixed(1)}km` : 'N/A'}</p>
             <div className="absolute flex w-screen h-screen top-0 left-0 justify-center items-center">
             <div onClick={() => removeLocation()} className='bg-orange-800 justify-center items-center flex bg-opacity-30 text-orange-400 w-48 h-48 rounded-full'>
             <div onClick={() => getPlace()} className={`${place ? 'transition-locator-btn-dark-orange' : 'transition-locator-btn-orange'} transition-locator-btn absolute flex items-center justify-center rounded-full z-10 h-0 w-0 bg-orange-400 overflow-hidden text-nowrap`}>
@@ -129,7 +136,7 @@ function LocationFinder() {
             <div id="map"></div>
 
             {selectedLocation()}
-            <button className=" cursor-pointer absolute bg-red-400" onClick={() => {capturePlace(); console.log('fuck')}}>{placeCaptured ? 'captured' : 'not captured'}</button>
+            <button className=" cursor-pointer absolute bg-red-400" onClick={() => {capturePlace()}}>{placeCaptured ? 'captured' : 'not captured'}</button>
         </div>
   )
 }
