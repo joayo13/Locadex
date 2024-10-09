@@ -3,7 +3,7 @@ import '../App.css';
 import AnimatedLink from '../components/AnimatedLink';
 import { useAuth } from '../contexts/AuthContext';
 import { flushSync } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useError } from '../contexts/ErrorContext';
 
 function SignIn() {
@@ -12,6 +12,8 @@ function SignIn() {
     const { login, googleSignIn } = useAuth()
     const { setError } = useError()
     const navigate = useNavigate()
+    const location = useLocation(); // Get the current location object
+
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -19,7 +21,7 @@ function SignIn() {
             await login(email, password)
             document.startViewTransition(() => {
                 flushSync(() => {
-                  navigate("/");
+                  navigate(`${location.pathname}`);
                 });
               });
         }
@@ -34,7 +36,7 @@ function SignIn() {
         await googleSignIn()
         document.startViewTransition(() => {
             flushSync(() => {
-              navigate("/");
+                navigate(`${location.pathname}`);
             });
           });
     }

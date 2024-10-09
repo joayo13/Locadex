@@ -17,14 +17,17 @@ function LocationFinder() {
         loadSavedPlace()
     },[])
 
+    async function getDistanceFromLatLon() {
+        const location = place?.geometry?.location;
+        const lat1 = Number(location?.lat) ?? 0;
+        const lon1 = Number(location?.lng) ?? 0;
+        const [lat2, lon2] = await getLocation()
+        const d = await getDistanceFromLatLonInKm([lat2, lon2], [lat1, lon1]); // Get distance
+        return d;
+    }
     async function capturePlace() {
         try {
-            //
-            const location = place?.geometry?.location;
-            const lat1 = Number(location?.lat) ?? 0;
-            const lon1 = Number(location?.lng) ?? 0;
-            const [lat2, lon2] = await getLocation()
-            const d = await getDistanceFromLatLonInKm([lat2, lon2], [lat1, lon1]); // Get distance
+            const d = await getDistanceFromLatLon()
             if (d !== undefined && d < 0.5) {
                 if (currentUser) {
                     const userDocRef = doc(db, "users", currentUser.uid);
@@ -93,7 +96,13 @@ function LocationFinder() {
             <div className="w-full text-orange-400">
             <p>Selected Place:</p>
             <div className="h-px w-full bg-orange-400"></div>
-            <p className="text-stone-200">{place?.name ?? 'None'}</p>
+            <p className="text-stone-200">{place?.name ?? 'N/A'}</p>
+            <p>Rating:</p>
+            <div className="h-px w-full bg-orange-400"></div>
+            <p className="text-stone-200">{place?.rating ? `${place?.rating?.toString()} (${place?.user_ratings_total?.toString()} Reviews)` : 'N/A'}</p>
+            <p>Distance:</p>
+            <div className="h-px w-full bg-orange-400"></div>
+            <p className="text-stone-200">{'N/A'}</p>
             <div className="absolute flex w-screen h-screen top-0 left-0 justify-center items-center">
             <div onClick={() => removeLocation()} className='bg-orange-800 justify-center items-center flex bg-opacity-30 text-orange-400 w-48 h-48 rounded-full'>
             <div onClick={() => getPlace()} className={`${place ? 'transition-locator-btn-dark-orange' : 'transition-locator-btn-orange'} transition-locator-btn absolute flex items-center justify-center rounded-full z-10 h-0 w-0 bg-orange-400 overflow-hidden text-nowrap`}>

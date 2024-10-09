@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../App.css';
 import AnimatedLink from '../components/AnimatedLink';
 import { useAuth } from '../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { flushSync } from 'react-dom';
 import { useError } from '../contexts/ErrorContext';
 
@@ -12,6 +12,7 @@ function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const { signup, googleSignIn } = useAuth()
     const navigate = useNavigate()
+    const location = useLocation()
     const {setError} = useError()
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -24,7 +25,7 @@ function SignUp() {
             await signup(email, password)
             document.startViewTransition(() => {
                 flushSync(() => {
-                  navigate("/");
+                    navigate(`${location.pathname}`);
                 });
               });
             
@@ -38,7 +39,7 @@ function SignUp() {
         await googleSignIn()
         document.startViewTransition(() => {
             flushSync(() => {
-              navigate("/");
+                navigate(`${location.pathname}`);
             });
           });
     }

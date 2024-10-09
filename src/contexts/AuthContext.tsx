@@ -58,7 +58,7 @@ const AuthProvider = ({ children }: { children: ReactNode }) => {
   // Google Sign-In with Popup or Redirect (for mobile)
   const googleSignIn = async () => {
     try {
-        await signInWithPopup(auth, googleProvider); // Use popup on desktops
+      await signInWithPopup(auth, googleProvider); // Use popup on desktops
     } catch (error) {
       console.error('Google sign-in error:', error);
       throw error;
