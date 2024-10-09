@@ -22,22 +22,27 @@ export const getLocation = (): Promise<[number, number]> => {
 
 const EARTH_RADIUS_KM = 6371;
 
-export function getDistanceFromLatLonInKm(userLatLon: [number, number] = [0, 0], placeLatLon: [number, number] = [0, 0]) {
+export function getDistanceFromLatLonInKm(
+    userLatLon: [number, number] = [0, 0],
+    placeLatLon: [number, number] = [0, 0]
+) {
     const [lat1, lon1] = placeLatLon;
     const [lat2, lon2] = userLatLon;
-    
+
     const dLat = deg2rad(lat2 - lat1);
     const dLon = deg2rad(lon2 - lon1);
-    
-    const a = 
+
+    const a =
         Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-        Math.sin(dLon / 2) * Math.sin(dLon / 2);
-    
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+        Math.cos(deg2rad(lat1)) *
+            Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     const distance = EARTH_RADIUS_KM * c;
-    console.log(distance)
-    return(distance)
+    console.log(distance);
+    return distance;
 }
 
 function deg2rad(deg: number) {
@@ -45,7 +50,9 @@ function deg2rad(deg: number) {
 }
 
 // Function to get human-readable error messages
-const getGeolocationErrorMessage = (error: GeolocationPositionError): string => {
+const getGeolocationErrorMessage = (
+    error: GeolocationPositionError
+): string => {
     switch (error.code) {
         case error.PERMISSION_DENIED:
             return 'User denied the request for Geolocation.';
