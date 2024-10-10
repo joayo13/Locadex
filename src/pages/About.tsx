@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import LoadingScreen from './LoadingScreen';
-import { User } from 'firebase/auth';
 
-function Home() {
+function About() {
     const [isMobileDevice, setIsMobileDevice] = useState(false);
-    const { loading, currentUser } = useAuth();
-    const GuestPage = () => {
+    const { loading } = useAuth();
+    const AboutLocadex = () => {
         return (
             <div className="bg-stone-950 min-h-screen text-stone-200 px-4">
                 {isMobileDevice ? <div></div> : null}
@@ -35,26 +34,6 @@ function Home() {
                 </p>
             </div>
         );
-    };
-    const UserPage = (currentUser: User) => {
-        return (
-            <div className="bg-stone-950 min-h-screen text-stone-200 px-4">
-                {isMobileDevice ? <div></div> : null}
-                <h1 className="text-6xl py-4 playfair text-orange-400">
-                    Dashboard
-                </h1>
-                <h2 className="pb-4 playfair text-stone-200">
-                    {currentUser.email}
-                </h2>
-            </div>
-        );
-    };
-    function returnUserOrGuestPage() {
-        if (currentUser) {
-            return UserPage(currentUser);
-        } else {
-            return GuestPage();
-        }
     }
 
     useEffect(() => {
@@ -64,7 +43,7 @@ function Home() {
         }
     }, []);
 
-    return <>{!loading ? returnUserOrGuestPage() : <LoadingScreen />}</>;
+    return <>{!loading ? AboutLocadex() : <LoadingScreen />}</>;
 }
 
-export default Home;
+export default About;

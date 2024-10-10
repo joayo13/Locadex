@@ -3,7 +3,6 @@ import './App.css';
 import SignIn from './pages/SignIn';
 import MainNav from './components/MainNav';
 import SignUp from './pages/SignUp';
-import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import LocationIndex from './pages/LocationIndex';
 import AuthProvider from './contexts/AuthContext';
@@ -12,6 +11,7 @@ import Map from './pages/Map';
 import LocationFinder from './pages/LocationFinder';
 import GlobalErrorNotification from './components/GlobalErrorNotification';
 import { ErrorProvider } from './contexts/ErrorContext';
+import About from './pages/About';
 //TODO: Implement this haversine equation for checking distance between lat longs
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -33,22 +33,19 @@ const App: React.FC = () => {
                     <MainNav />
                     <GlobalErrorNotification />
                     <Routes>
-                        <Route path="/" element={<Home />} />
+                        <Route path="/" element={
+                                <PrivateRoute>
+                                    <LocationFinder />
+                                </PrivateRoute>
+                            } />
                         <Route path="/sign-in" element={<SignIn />} />
                         <Route path="/sign-up" element={<SignUp />} />
+                        <Route path="/about" element={<About />} />
                         <Route
                             path="/location-index"
                             element={
                                 <PrivateRoute>
                                     <LocationIndex />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/location-finder"
-                            element={
-                                <PrivateRoute>
-                                    <LocationFinder />
                                 </PrivateRoute>
                             }
                         />

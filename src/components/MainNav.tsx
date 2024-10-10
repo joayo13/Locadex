@@ -57,7 +57,7 @@ function MainNav() {
                             <li>
                                 <AnimatedLink
                                     onClick={() => setMenuOpen(false)}
-                                    to={'/location-finder'}
+                                    to={'/'}
                                     className="underline"
                                 >
                                     Locator
@@ -79,6 +79,15 @@ function MainNav() {
                                     className="underline"
                                 >
                                     Map
+                                </AnimatedLink>
+                            </li>
+                            <li>
+                                <AnimatedLink
+                                    onClick={() => setMenuOpen(false)}
+                                    to={'/about'}
+                                    className="underline"
+                                >
+                                    About
                                 </AnimatedLink>
                             </li>
                         </ul>
