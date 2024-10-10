@@ -124,6 +124,7 @@ function LocationFinder() {
     
         return (
             <div className="w-full text-orange-400">
+                <h1 className="text-6xl py-4 playfair text-orange-400">Locator</h1>
                 {items.map((item, index) => (
                     <div 
                         key={index} 
@@ -202,7 +203,6 @@ function LocationFinder() {
     }
     return (
         <div className="min-h-screen bg-stone-950 text-stone-200 px-4">
-            <h1 className="text-6xl py-4 playfair text-orange-400">Locator</h1>
             {/* using this empty div id=map to give init map something to attach to, we init map in generateLocation */}
             <div id="map"></div>
 
