@@ -8,6 +8,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { updateDoc, getDoc, doc, setDoc } from 'firebase/firestore';
 import { db } from '../services/firebase';
 import { useError } from '../contexts/ErrorContext';
+import LoadingScreen from './LoadingScreen';
 
 function LocationFinder() {
     const [place, setPlace] = useState<google.maps.places.PlaceResult | null>(
@@ -115,42 +116,64 @@ function LocationFinder() {
         localStorage.removeItem('place');
     }
     const selectedLocation = () => {
+        const items = [
+            { label: "Selected Place:", value: place?.name ?? 'N/A' },
+            { label: "Rating:", value: place?.rating ? `${place?.rating.toString()} (${place?.user_ratings_total?.toString()} Reviews)` : 'N/A' },
+            { label: "Distance:", value: distance ? `${distance.toFixed(1)}km` : 'N/A' }
+        ];
+    
         return (
             <div className="w-full text-orange-400">
-                <p>Selected Place:</p>
-                <div className="h-px w-full bg-orange-400"></div>
-                <p className="text-stone-200">{place?.name ?? 'N/A'}</p>
-                <p>Rating:</p>
-                <div className="h-px w-full bg-orange-400"></div>
-                <p className="text-stone-200">
-                    {place?.rating
-                        ? `${place?.rating?.toString()} (${place?.user_ratings_total?.toString()} Reviews)`
-                        : 'N/A'}
-                </p>
-                <p>Distance:</p>
-                <div className="h-px w-full bg-orange-400"></div>
-                <p className="text-stone-200">
-                    {distance ? `${distance.toFixed(1)}km` : 'N/A'}
-                </p>
-                <div className="absolute flex w-screen h-screen top-0 left-0 justify-center items-center">
-                    <div
-                        onClick={() => removeLocation()}
-                        className="bg-orange-800 justify-center items-center flex bg-opacity-30 text-orange-400 w-48 h-48 rounded-full"
+                {items.map((item, index) => (
+                    <div 
+                        key={index} 
+                        className="fade-in-animation" 
+                        style={{ animationDelay: `${index * 0.2}s` }} // Stagger effect with delay
                     >
-                        <div
-                            onClick={() => getPlace()}
-                            className={`${place ? 'transition-locator-btn-dark-orange' : 'transition-locator-btn-orange'} transition-locator-btn absolute flex items-center justify-center rounded-full z-10 h-0 w-0 bg-orange-400 overflow-hidden text-nowrap`}
-                        >
-                            <p className="text-black">
-                                {loading ? 'Loading...' : 'Search Place'}
-                            </p>
-                        </div>
-                        <p>Remove Place</p>
+                        <p>{item.label}</p>
+                        <div className="h-px w-full bg-orange-400"></div>
+                        <p className="text-stone-200">{item.value}</p>
                     </div>
-                </div>
+                ))}
             </div>
         );
     };
+    function buttonsIfCurrentPlace() {
+        return (
+            <div className='mt-2'>
+        <button
+                className="bg-green-800 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm"
+                onClick={() => {
+                    capturePlace();
+                }}
+            >
+                {placeCaptured ? 'Already Captured' : "Capture Place"}
+            </button>
+            
+            <button
+                className="bg-red-800 ml-2 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm"
+                onClick={() => {
+                    removeLocation();
+                }}
+            >
+                Remove Location
+            </button>
+            </div>
+        )
+    }
+    function buttonsIfNotCurrentPlace() {
+        return (
+            <button
+                className="bg-orange-800 mt-2 w-fit mx-auto text-stone-200 px-4 py-2 rounded-sm"
+                onClick={() => {
+                    getPlace()
+                }}
+            >
+                New Location
+            </button>
+        )
+
+    }
     async function getPlace() {
         setLoading(true);
         console.log('Loading started');
@@ -183,15 +206,8 @@ function LocationFinder() {
             {/* using this empty div id=map to give init map something to attach to, we init map in generateLocation */}
             <div id="map"></div>
 
-            {selectedLocation()}
-            <button
-                className=" cursor-pointer absolute bg-red-400"
-                onClick={() => {
-                    capturePlace();
-                }}
-            >
-                {placeCaptured ? 'captured' : 'not captured'}
-            </button>
+            {loading ? <LoadingScreen/> : selectedLocation()}
+            {place ? buttonsIfCurrentPlace() : buttonsIfNotCurrentPlace()}
         </div>
     );
 }
