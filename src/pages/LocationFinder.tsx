@@ -170,7 +170,7 @@ function LocationFinder() {
                     getPlace()
                 }}
             >
-                New Location
+                Get New Location
             </button>
         )
 
