@@ -33,11 +33,14 @@ const App: React.FC = () => {
                     <MainNav />
                     <GlobalErrorNotification />
                     <Routes>
-                        <Route path="/" element={
+                        <Route
+                            path="/"
+                            element={
                                 <PrivateRoute>
                                     <LocationFinder />
                                 </PrivateRoute>
-                            } />
+                            }
+                        />
                         <Route path="/sign-in" element={<SignIn />} />
                         <Route path="/sign-up" element={<SignUp />} />
                         <Route path="/about" element={<About />} />

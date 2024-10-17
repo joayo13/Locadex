@@ -34,7 +34,7 @@ function About() {
                 </p>
             </div>
         );
-    }
+    };
 
     useEffect(() => {
         const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
