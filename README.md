@@ -26,7 +26,7 @@ Locadex is a mobile Progressive Web App (PWA) that generates top-rated nearby po
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/your-username/locadex.git
+    git clone https://github.com/joayo13/Locadex.git
     cd locadex
     ```
 
