@@ -1,6 +1,6 @@
 # Locadex
 
-Locadex is a mobile Progressive Web App (PWA) that generates top-rated nearby points of interest. It also has a map that helps you track the point of interest Can be used in desktop but meant for mobile.
+Locadex is a Progressive Web App (PWA) that generates top-rated nearby points of interest. It has a map that helps you track the point of interest so you can then capture and collect the locations you've visited. Can be used in desktop but meant for mobile.
 
 ## Features
 
