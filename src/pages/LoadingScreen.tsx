@@ -6,7 +6,6 @@ function LoadingScreen() {
             <div className="container">
                 <div className="line"></div>
                 <p className="text-sm text-orange-400 mt-20 text-center">
-                    initializing
                 </p>
             </div>
         </div>

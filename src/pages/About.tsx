@@ -1,49 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import LoadingScreen from './LoadingScreen';
+import React, { useEffect } from 'react';
 
-function About() {
-    const [isMobileDevice, setIsMobileDevice] = useState(false);
-    const { loading } = useAuth();
-    const AboutLocadex = () => {
-        return (
-            <div className="bg-stone-950 min-h-screen text-stone-200 px-4">
-                {isMobileDevice ? <div></div> : null}
-                <h1 className="text-6xl py-4 playfair text-orange-400">
-                    Your next adventure awaits.
-                </h1>
-                <h2 className="text-3xl pb-4 playfair text-stone-200">
-                    Introducing Locadex
-                </h2>
-                <p>
-                    The Locadex (Location-Index) is an all-in-one travel
-                    companion that uses GPS and Google Maps to give you fun
-                    things to do near you.
-                </p>
-                <p>
-                    Track your progress over time and keep on hunting down new
-                    locations. It's as simple as that.
-                </p>
-                <p>
-                    The Locadex features a built in map, built in GPS, locator,
-                    and an index that contains all the places you've been.
-                </p>
-                <p>
-                    Open up the app, and let it be your guide. It's an answer to
-                    the question "What should I do today?"
-                </p>
-            </div>
-        );
-    };
+const NotificationComponent = () => {
+  useEffect(() => {
+    // Check if the browser supports notifications
+    if (!('Notification' in window)) {
+      alert('This browser does not support desktop notifications');
+    } else {
+      // Request permission to show notifications
+      Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+          // Set a timer to send a notification after 1 minute
+          const timer = setTimeout(() => {
+            new Notification('Pomodoro Timer', {
+              body: '1 minute has passed! Time to focus!',
+              icon: '/path-to-your-icon.png', // Optional icon
+            });
+          }, 5 * 1000); // 1 minute in milliseconds
 
-    useEffect(() => {
-        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-        if (isMobile) {
-            setIsMobileDevice(true);
+          // Clear the timer if the component is unmounted
+          return () => clearTimeout(timer);
+        } else {
+          alert('Notifications are blocked. Please allow them.');
         }
-    }, []);
+      });
+    }
+  }, []);
 
-    return <>{!loading ? AboutLocadex() : <LoadingScreen />}</>;
-}
+  return (
+    <div>
+      <h1>Pomodoro Timer</h1>
+      <p>You'll receive a notification after 1 minute.</p>
+    </div>
+  );
+};
 
-export default About;
+export default NotificationComponent;
+

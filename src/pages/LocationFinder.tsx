@@ -108,6 +108,7 @@ function LocationFinder() {
             if (savedPlace) {
                 setPlace(savedPlace);
                 setLoading(false);
+                console.log(savedPlace)
                 return;
             }
         }
