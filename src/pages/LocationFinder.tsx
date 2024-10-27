@@ -25,6 +25,7 @@ function LocationFinder() {
         try {
             const results = await getPlaces(radius, ratingMinimum, reviewAmountMinimum, placeTypes);
             // Handle the results (e.g., display them, update state, etc.)
+            console.log(results)
             addMarkers(results.map((result) => result.geometry?.location ?? null)) 
         } catch (error) {
             if(error instanceof Error)
@@ -46,12 +47,8 @@ function LocationFinder() {
     };
 
     return (
-        <div className="min-h-screen bg-stone-950 text-stone-200 px-4">
+        <div className="bg-stone-950 text-stone-200 px-4 flex flex-col lg:flex-row">
             {/* Empty div for map initialization */}
-            <div id="map" style={{ height: '400px' }}></div>
-            
-            {loading && <LoadingScreen />}
-
             <div className="flex flex-col gap-2">
             <Slider 
                     value={radius} 
@@ -157,6 +154,7 @@ function LocationFinder() {
                     Search Places
                 </button>
             </div>
+            <div style={{height: 'calc(100vh - 4rem)', width: '100%'}} id="map"></div>
         </div>
     );
 }
