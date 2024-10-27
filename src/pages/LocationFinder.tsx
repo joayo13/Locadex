@@ -1,8 +1,9 @@
 
+import Slider from '../components/Slider';
 import { useError } from '../contexts/ErrorContext';
-import { getPlaces } from '../services/google';
+import { addMarkers, getPlaces, initMap, initUserPosition } from '../services/google';
 import LoadingScreen from './LoadingScreen';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 type PlaceType = "restaurant" | "cafe" | "tourist_attraction" | "museum" | "park" | "hotel" | "shopping_mall" | "night_club" | "gym" | "library";
 
@@ -14,12 +15,17 @@ function LocationFinder() {
     const [placeTypes, setPlaceTypes] = useState<Array<PlaceType>>(["restaurant"]); // Default place type
     const {setError} = useError()
 
+    useEffect(() => {
+        initMap()
+        initUserPosition()
+    },[])
+
     const handleSearch = async () => {
         setLoading(true);
         try {
             const results = await getPlaces(radius, ratingMinimum, reviewAmountMinimum, placeTypes);
             // Handle the results (e.g., display them, update state, etc.)
-            console.log(results);
+            addMarkers(results.map((result) => result.geometry?.location ?? null)) 
         } catch (error) {
             if(error instanceof Error)
             setError(error.message)
@@ -46,18 +52,17 @@ function LocationFinder() {
             
             {loading && <LoadingScreen />}
 
-            <div className="controls mt-4">
-                <label>
-                    Radius (meters):
-                    <input
-                        type="number"
-                        value={radius}
-                        onChange={(e) => setRadius(Number(e.target.value))}
-                        className="ml-2 p-1 text-black"
-                    />
-                </label>
+            <div className="flex flex-col gap-2">
+            <Slider 
+                    value={radius} 
+                    min={100} 
+                    max={5000} 
+                    step={50} 
+                    onChange={setRadius} 
+                    label="Search Radius"
+                />
 
-                <label className="ml-4">
+                <label>
                     Minimum Rating:
                     <input
                         type="number"
@@ -70,7 +75,7 @@ function LocationFinder() {
                     />
                 </label>
 
-                <label className="ml-4">
+                <label>
                     Minimum Review Count:
                     <input
                         type="number"
@@ -81,7 +86,7 @@ function LocationFinder() {
                     />
                 </label>
 
-                <div className="mt-4">
+                <div className="flex flex-col items-start">
                     <h3>Place Types:</h3>
                     <label>
                         <input
@@ -92,7 +97,7 @@ function LocationFinder() {
                         />
                         Restaurant
                     </label>
-                    <label className="ml-4">
+                    <label>
                         <input
                             type="checkbox"
                             value="cafe"
@@ -101,7 +106,7 @@ function LocationFinder() {
                         />
                         Café
                     </label>
-                    <label className="ml-4">
+                    <label>
                         <input
                             type="checkbox"
                             value="tourist_attraction"
@@ -110,7 +115,7 @@ function LocationFinder() {
                         />
                         Tourist Attraction
                     </label>
-                    <label className="ml-4">
+                    <label>
                         <input
                             type="checkbox"
                             value="museum"
@@ -119,7 +124,7 @@ function LocationFinder() {
                         />
                         Museum
                     </label>
-                    <label className="ml-4">
+                    <label>
                         <input
                             type="checkbox"
                             value="park"
@@ -128,7 +133,7 @@ function LocationFinder() {
                         />
                         Park
                     </label>
-                    <label className="ml-4">
+                    <label>
                         <input
                             type="checkbox"
                             value="gym"
@@ -137,7 +142,7 @@ function LocationFinder() {
                         />
                         Gym
                     </label>
-                    <label className="ml-4">
+                    <label>
                         <input
                             type="checkbox"
                             value="library"
@@ -148,7 +153,7 @@ function LocationFinder() {
                     </label>
                 </div>
 
-                <button onClick={handleSearch} className="ml-4 p-2 bg-blue-600 text-white rounded">
+                <button onClick={handleSearch} className=" p-2 w-fit bg-blue-600 text-white rounded">
                     Search Places
                 </button>
             </div>

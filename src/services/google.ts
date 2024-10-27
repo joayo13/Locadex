@@ -95,7 +95,6 @@ export const getPlaces = async (
     reviewAmountMinimum: number,
     placeTypes: Array<PlaceType>
 ): Promise<Array<google.maps.places.PlaceResult>> => {
-    await initMap();
     const center = new google.maps.LatLng(latlng[0], latlng[1]);
     const service = new google.maps.places.PlacesService(map as google.maps.Map);
 
