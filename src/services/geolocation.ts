@@ -1,4 +1,4 @@
-export const getLocation = (): Promise<[number, number]> => {
+export const getUserLocation = (): Promise<[number, number]> => {
     return new Promise((resolve, reject) => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
