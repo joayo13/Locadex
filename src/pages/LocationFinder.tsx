@@ -16,9 +16,13 @@ function LocationFinder() {
     const {setError} = useError()
 
     useEffect(() => {
-        initMap()
-        initUserPosition()
-    },[])
+        const initializeMapAndPosition = async () => {
+            await initMap();
+            await initUserPosition();
+        };
+    
+        initializeMapAndPosition();
+    }, []);
 
     const handleSearch = async () => {
         setLoading(true);
