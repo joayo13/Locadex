@@ -1,17 +1,11 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
-import SignIn from './pages/SignIn';
 import MainNav from './components/MainNav';
-import SignUp from './pages/SignUp';
 import NotFound from './pages/NotFound';
-import LocationIndex from './pages/LocationIndex';
-import AuthProvider from './contexts/AuthContext';
-import PrivateRoute from './components/PrivateRoute';
 import Map from './pages/Map';
 import LocationFinder from './pages/LocationFinder';
 import GlobalErrorNotification from './components/GlobalErrorNotification';
 import { ErrorProvider } from './contexts/ErrorContext';
-import About from './pages/About';
 //TODO: Implement this haversine equation for checking distance between lat longs
 // function distance(lat1, lon1, lat2, lon2) {
 //   const r = 6371; // km
@@ -29,40 +23,13 @@ const App: React.FC = () => {
     return (
         <Router>
             <ErrorProvider>
-                <AuthProvider>
-                    <MainNav />
-                    <GlobalErrorNotification />
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={
-                                <PrivateRoute>
-                                    <LocationFinder />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route path="/sign-in" element={<SignIn />} />
-                        <Route path="/sign-up" element={<SignUp />} />
-                        <Route path="/about" element={<About />} />
-                        <Route
-                            path="/location-index"
-                            element={
-                                <PrivateRoute>
-                                    <LocationIndex />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route
-                            path="/map"
-                            element={
-                                <PrivateRoute>
-                                    <Map />
-                                </PrivateRoute>
-                            }
-                        />
-                        <Route path="*" element={<NotFound />} />
-                    </Routes>
-                </AuthProvider>
+                <MainNav />
+                <GlobalErrorNotification />
+                <Routes>
+                    <Route path="/" element={<LocationFinder />} />
+                    <Route path="/map" element={<Map />} />
+                    <Route path="*" element={<NotFound />} />
+                </Routes>
             </ErrorProvider>
         </Router>
         // <div className='bg-neutral-900 text-neutral-200 px-2'>

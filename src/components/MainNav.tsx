@@ -1,23 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import AnimatedLink from './AnimatedLink';
-import { useAuth } from '../contexts/AuthContext';
-import { flushSync } from 'react-dom';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 function MainNav() {
     const [menuOpen, setMenuOpen] = useState(false);
-    const { currentUser, logout } = useAuth();
-    const navigate = useNavigate();
     function toggleMenu() {
         setMenuOpen(!menuOpen);
-    }
-    async function handleLogout() {
-        await logout();
-        document.startViewTransition(() => {
-            flushSync(() => {
-                navigate('/');
-            });
-        });
     }
     useEffect(() => {
         if (menuOpen) {
@@ -37,13 +24,13 @@ function MainNav() {
     return (
         <>
             <nav className="bg-stone-900 shadow-lg text-stone-200 flex justify-between items-center pl-4 h-16 fixed w-full z-20">
-                <AnimatedLink
+                <Link
                     to={'/'}
                     onClick={() => setMenuOpen(false)}
                     className="text-xl playfair text-orange-400"
                 >
                     Locadex
-                </AnimatedLink>
+                </Link>
                 <div
                     onClick={handleOverlayClick}
                     className={`overlay ${menuOpen ? 'animate-overlay-open' : 'animate-overlay-close'}`}
@@ -55,67 +42,43 @@ function MainNav() {
                     <div className="flex flex-col items-start gap-8">
                         <ul className="flex flex-col items-start gap-8">
                             <li>
-                                <AnimatedLink
+                                <Link
                                     onClick={() => setMenuOpen(false)}
                                     to={'/'}
                                     className="underline"
                                 >
                                     Locator
-                                </AnimatedLink>
+                                </Link>
                             </li>
                             <li>
-                                <AnimatedLink
+                                <Link
                                     onClick={() => setMenuOpen(false)}
                                     to={'/location-index'}
                                     className="underline"
                                 >
                                     Index
-                                </AnimatedLink>
+                                </Link>
                             </li>
                             <li>
-                                <AnimatedLink
+                                <Link
                                     onClick={() => setMenuOpen(false)}
                                     to={'/map'}
                                     className="underline"
                                 >
                                     Map
-                                </AnimatedLink>
+                                </Link>
                             </li>
                             <li>
-                                <AnimatedLink
+                                <Link
                                     onClick={() => setMenuOpen(false)}
                                     to={'/about'}
                                     className="underline"
                                 >
                                     About
-                                </AnimatedLink>
+                                </Link>
                             </li>
                         </ul>
                         <span className="h-px bg-stone-200 w-full"></span>
-                        {currentUser ? (
-                            <p>Logged in as {currentUser.email}</p>
-                        ) : null}
-                        {currentUser ? (
-                            <button
-                                onClick={() => {
-                                    handleLogout();
-                                    setMenuOpen(false);
-                                }}
-                                className="underline"
-                            >
-                                Sign Out
-                            </button>
-                        ) : (
-                            <AnimatedLink
-                                to={'/sign-in'}
-                                onClick={() => {
-                                    setMenuOpen(false);
-                                }}
-                                className="underline"
-                            >
-                                Sign In
-                            </AnimatedLink>
-                        )}
                     </div>
                 </nav>
                 <button

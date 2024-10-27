@@ -1,6 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useError } from '../contexts/ErrorContext';
-import '../';
 
 const GlobalErrorNotification = () => {
     const { error, setError } = useError();

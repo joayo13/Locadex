@@ -4,22 +4,23 @@ Locadex is a Progressive Web App (PWA) that generates top-rated nearby points of
 
 ## Features
 
-- **TypeSafe**: Built with TypeScript to ensure code reliability and maintainability.
-- **Progressive Web App (PWA)**: Supports offline functionality and can be installed directly on your device.
-- **User Authentication**: Secure sign-up and login with Firebase authentication.
-- **Adventure Tracking**: Capture and save your locations.
+-   **TypeSafe**: Built with TypeScript to ensure code reliability and maintainability.
+-   **Progressive Web App (PWA)**: Supports offline functionality and can be installed directly on your device.
+-   **User Authentication**: Secure sign-up and login with Firebase authentication.
+-   **Adventure Tracking**: Capture and save your locations.
 
 ## Tech Stack
 
-- **Frontend**: React, TypeScript
-- **Backend**: Firebase for authentication and Firestore for database management
-- **Maps API**: Google Maps and Google Places API
+-   **Frontend**: React, TypeScript
+-   **Backend**: Firebase for authentication and Firestore for database management
+-   **Maps API**: Google Maps and Google Places API
 
 ## Getting Started
 
 ### Prerequisites
-- Firebase account and project
-- Google Maps API key
+
+-   Firebase account and project
+-   Google Maps API key
 
 ### Installation
 
@@ -37,6 +38,7 @@ Locadex is a Progressive Web App (PWA) that generates top-rated nearby points of
     ```
 
 3. Set up your environment variables:
+
     - Create a `.env` file in the root directory
     - Add your Firebase config and Google Maps API key:
 

@@ -1,5 +1,4 @@
-import React from 'react';
-import AnimatedLink from '../components/AnimatedLink';
+import { Link } from 'react-router-dom';
 
 function NotFound() {
     return (
@@ -7,9 +6,9 @@ function NotFound() {
             <h1 className="text-6xl py-4 playfair text-orange-400">
                 404 Not Found
             </h1>
-            <AnimatedLink className="underline" to={'/'}>
+            <Link className="underline" to={'/'}>
                 Return to home
-            </AnimatedLink>
+            </Link>
         </div>
     );
 }
