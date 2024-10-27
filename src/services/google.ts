@@ -6,7 +6,7 @@ let latlng: [number, number];
 export const initMap = async () => {
     try {
         latlng = await getUserLocation();
-        const center = new google.maps.LatLng(latlng[0], latlng[1]);
+        const center = ({lat: latlng[0], lng: latlng[1]});
         map = new google.maps.Map(
             document.getElementById('map') as HTMLElement,
             {
