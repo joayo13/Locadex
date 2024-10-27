@@ -25,7 +25,7 @@ const GlobalErrorNotification = () => {
         <div
             className={`error ${errorShowing ? 'animate-error-in' : 'animate-error-out'}`}
         >
-            <div className="fixed bottom-0 w-full bg-red-900 text-stone-200 flex gap-2 px-2 py-8 rounded-md">
+            <div className="fixed bottom-0 z-50 w-full bg-red-900 text-stone-200 flex gap-2 px-2 py-8 rounded-md">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

@@ -154,7 +154,8 @@ function LocationFinder() {
                     Search Places
                 </button>
             </div>
-            <div style={{height: 'calc(100vh - 4rem)', width: '100%'}} id="map"></div>
+            <div style={loading ? {display: 'none'} : {height: 'calc(100vh - 4rem)', width: '100%'}} id="map"></div>
+            <div style={loading ? {height: 'calc(100vh - 4rem)', width: '100%'} : {display: 'none'}}><LoadingScreen/></div>
         </div>
     );
 }
