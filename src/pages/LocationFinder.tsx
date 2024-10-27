@@ -1,4 +1,5 @@
 
+import { useError } from '../contexts/ErrorContext';
 import { getPlaces } from '../services/google';
 import LoadingScreen from './LoadingScreen';
 import { useState } from 'react';
@@ -11,6 +12,7 @@ function LocationFinder() {
     const [ratingMinimum, setRatingMinimum] = useState(3); // Default rating
     const [reviewAmountMinimum, setReviewAmountMinimum] = useState(10); // Default review count
     const [placeTypes, setPlaceTypes] = useState<Array<PlaceType>>(["restaurant"]); // Default place type
+    const {setError} = useError()
 
     const handleSearch = async () => {
         setLoading(true);
@@ -19,9 +21,21 @@ function LocationFinder() {
             // Handle the results (e.g., display them, update state, etc.)
             console.log(results);
         } catch (error) {
-            console.error(error);
+            if(error instanceof Error)
+            setError(error.message)
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handlePlaceTypeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            // Add place type if checked
+            setPlaceTypes((prev) => [...prev, value as PlaceType]);
+        } else {
+            // Remove place type if unchecked
+            setPlaceTypes((prev) => prev.filter((type) => type !== value));
         }
     };
 
@@ -67,29 +81,72 @@ function LocationFinder() {
                     />
                 </label>
 
-                <label className="ml-4">
-                    Place Types:
-                    <select
-                        multiple
-                        value={placeTypes}
-                        onChange={(e) => {
-                            const selectedOptions = Array.from(e.target.selectedOptions, option => option.value as PlaceType);
-                            setPlaceTypes(selectedOptions);
-                        }}
-                        className="ml-2 p-1 text-black"
-                    >
-                        <option value="restaurant">Restaurant</option>
-                        <option value="cafe">Café</option>
-                        <option value="tourist_attraction">Tourist Attraction</option>
-                        <option value="museum">Museum</option>
-                        <option value="park">Park</option>
-                        <option value="hotel">Hotel</option>
-                        <option value="shopping_mall">Shopping Mall</option>
-                        <option value="night_club">Night Club</option>
-                        <option value="gym">Gym</option>
-                        <option value="library">Library</option>
-                    </select>
-                </label>
+                <div className="mt-4">
+                    <h3>Place Types:</h3>
+                    <label>
+                        <input
+                            type="checkbox"
+                            value="restaurant"
+                            checked={placeTypes.includes("restaurant")}
+                            onChange={handlePlaceTypeChange}
+                        />
+                        Restaurant
+                    </label>
+                    <label className="ml-4">
+                        <input
+                            type="checkbox"
+                            value="cafe"
+                            checked={placeTypes.includes("cafe")}
+                            onChange={handlePlaceTypeChange}
+                        />
+                        Café
+                    </label>
+                    <label className="ml-4">
+                        <input
+                            type="checkbox"
+                            value="tourist_attraction"
+                            checked={placeTypes.includes("tourist_attraction")}
+                            onChange={handlePlaceTypeChange}
+                        />
+                        Tourist Attraction
+                    </label>
+                    <label className="ml-4">
+                        <input
+                            type="checkbox"
+                            value="museum"
+                            checked={placeTypes.includes("museum")}
+                            onChange={handlePlaceTypeChange}
+                        />
+                        Museum
+                    </label>
+                    <label className="ml-4">
+                        <input
+                            type="checkbox"
+                            value="park"
+                            checked={placeTypes.includes("park")}
+                            onChange={handlePlaceTypeChange}
+                        />
+                        Park
+                    </label>
+                    <label className="ml-4">
+                        <input
+                            type="checkbox"
+                            value="gym"
+                            checked={placeTypes.includes("gym")}
+                            onChange={handlePlaceTypeChange}
+                        />
+                        Gym
+                    </label>
+                    <label className="ml-4">
+                        <input
+                            type="checkbox"
+                            value="library"
+                            checked={placeTypes.includes("library")}
+                            onChange={handlePlaceTypeChange}
+                        />
+                        Library
+                    </label>
+                </div>
 
                 <button onClick={handleSearch} className="ml-4 p-2 bg-blue-600 text-white rounded">
                     Search Places
