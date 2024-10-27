@@ -2,6 +2,7 @@ import { getLocation } from './geolocation';
 
 let map: google.maps.Map | null = null;
 let watcherId: number | null = null; // Store the watcher ID
+
 export const initMap = async () => {
     try {
         let latlng = await getLocation();
@@ -72,7 +73,7 @@ const updateUserPosition = (pos: GeolocationPosition) => {
         content: markerContent,
     });
 };
-export const addMarker = (location: google.maps.LatLng | null) => {
+export const addMarkers = (location: google.maps.LatLng | null) => {
     if (location && map) {
         new google.maps.marker.AdvancedMarkerElement({
             position: location,

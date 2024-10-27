@@ -53,28 +53,10 @@ function MainNav() {
                             <li>
                                 <Link
                                     onClick={() => setMenuOpen(false)}
-                                    to={'/location-index'}
-                                    className="underline"
-                                >
-                                    Index
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    onClick={() => setMenuOpen(false)}
                                     to={'/map'}
                                     className="underline"
                                 >
                                     Map
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    onClick={() => setMenuOpen(false)}
-                                    to={'/about'}
-                                    className="underline"
-                                >
-                                    About
                                 </Link>
                             </li>
                         </ul>
