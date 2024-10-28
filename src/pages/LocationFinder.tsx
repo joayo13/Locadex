@@ -3,7 +3,7 @@ import Slider from '../components/Slider';
 import { useError } from '../contexts/ErrorContext';
 import { addMarkers, getPlaces, initMap, initUserPosition } from '../services/google';
 import LoadingScreen from './LoadingScreen';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type PlaceType = "restaurant" | "cafe" | "tourist_attraction" | "museum" | "park" | "hotel" | "shopping_mall" | "night_club" | "gym" | "library";
 
@@ -14,11 +14,23 @@ function LocationFinder() {
     const [reviewAmountMinimum, setReviewAmountMinimum] = useState(10); // Default review count
     const [placeTypes, setPlaceTypes] = useState<Array<PlaceType>>(["restaurant"]); // Default place type
     const {setError} = useError()
+    const setErrorRef = useRef(setError)
 
     useEffect(() => {
         const initializeMapAndPosition = async () => {
-            await initMap();
-            await initUserPosition();
+            try {
+                setTimeout( async() => {
+                    await initMap();
+                    await initUserPosition();
+                },2000)
+                
+            }
+            catch(e) {
+                if (e instanceof Error) {
+                    setErrorRef.current(e.message)
+                }
+            }
+            
         };
     
         initializeMapAndPosition();
