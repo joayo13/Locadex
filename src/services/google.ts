@@ -118,10 +118,16 @@ export const getPlaces = async (
         const result = await new Promise<google.maps.places.PlaceResult | null>((resolve) => {
             service.nearbySearch(request, (results, status) => {
                 if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+                    
                     const filteredResults = results.filter(
-                        (place) =>
-                            (place.rating ?? 0) >= ratingMinimum &&
-                            (place.user_ratings_total ?? 0) >= reviewAmountMinimum
+                        (place) => {
+                            const firstType = place.types && place.types.length > 0 ? place.types[0] : null;
+                            return (
+                                (place.rating ?? 0) >= ratingMinimum &&
+                                (place.user_ratings_total ?? 0) >= reviewAmountMinimum &&
+                                firstType === request.type
+                            );
+                        }
                     );
 
                     if (filteredResults.length > 0) {
