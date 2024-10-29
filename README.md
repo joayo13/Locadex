@@ -1,25 +1,22 @@
 # Locadex
 
-Locadex is a Progressive Web App (PWA) that generates top-rated nearby points of interest. It has a map that helps you track the point of interest so you can then capture and collect the locations you've visited. Can be used in desktop but meant for mobile.
+This app was designed to efficiently find places (gyms, libraries, parks etc.) near the user. There are platforms which somewhat do this already like TripAdvisor. Except they do not let you customize and filter the results with the same precision as this application. I have also designed it to use as little data as possible, so if you decide to use the mobile version, you can safely use your data without it being taken up the way it would be with other applications. If you want to, you can download it to your device to have a more native app-like experience.
 
 ## Features
 
 -   **TypeSafe**: Built with TypeScript to ensure code reliability and maintainability.
 -   **Progressive Web App (PWA)**: Supports offline functionality and can be installed directly on your device.
--   **User Authentication**: Secure sign-up and login with Firebase authentication.
--   **Adventure Tracking**: Capture and save your locations.
+-   **Unit tested**
 
 ## Tech Stack
 
 -   **Frontend**: React, TypeScript
--   **Backend**: Firebase for authentication and Firestore for database management
 -   **Maps API**: Google Maps and Google Places API
 
 ## Getting Started
 
 ### Prerequisites
 
--   Firebase account and project
 -   Google Maps API key
 
 ### Installation
@@ -40,11 +37,9 @@ Locadex is a Progressive Web App (PWA) that generates top-rated nearby points of
 3. Set up your environment variables:
 
     - Create a `.env` file in the root directory
-    - Add your Firebase config and Google Maps API key:
+    - Add your Google Maps API key:
 
     ```bash
-    REACT_APP_FIREBASE_API_KEY=your-firebase-api-key
-    REACT_APP_FIREBASE_AUTH_DOMAIN=your-firebase-auth-domain
     REACT_APP_GOOGLE_MAPS_API_KEY=your-google-maps-api-key
     ```
 
