@@ -65,7 +65,7 @@ function LocationFinder() {
     return (
         <div className="bg-stone-950 text-stone-200 px-4 flex flex-col lg:flex-row">
             {/* Empty div for map initialization */}
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-2 mt-2">
             <Slider 
                     value={radius} 
                     min={100} 
@@ -76,7 +76,7 @@ function LocationFinder() {
                 />
 
                 <label>
-                    Minimum Rating:
+                    Minimum Rating
                     <input
                         type="number"
                         min="0"
@@ -84,27 +84,28 @@ function LocationFinder() {
                         step="0.1"
                         value={ratingMinimum}
                         onChange={(e) => setRatingMinimum(Number(e.target.value))}
-                        className="ml-2 p-1 text-black"
+                        className="block p-1 text-black"
                     />
                 </label>
 
                 <label>
-                    Minimum Review Count:
+                    Minimum Review Count
                     <input
                         type="number"
                         min="0"
                         value={reviewAmountMinimum}
                         onChange={(e) => setReviewAmountMinimum(Number(e.target.value))}
-                        className="ml-2 p-1 text-black"
+                        className="p-1 text-black"
                     />
                 </label>
 
                 <div className="flex flex-col items-start">
-                    <h3>Place Types:</h3>
+                    <h3>Place Types</h3>
                     <label>
                         <input
                             type="checkbox"
                             value="restaurant"
+                            className='mr-1'
                             checked={placeTypes.includes("restaurant")}
                             onChange={handlePlaceTypeChange}
                         />
@@ -114,6 +115,7 @@ function LocationFinder() {
                         <input
                             type="checkbox"
                             value="cafe"
+                            className='mr-1'
                             checked={placeTypes.includes("cafe")}
                             onChange={handlePlaceTypeChange}
                         />
@@ -123,6 +125,7 @@ function LocationFinder() {
                         <input
                             type="checkbox"
                             value="tourist_attraction"
+                            className='mr-1'
                             checked={placeTypes.includes("tourist_attraction")}
                             onChange={handlePlaceTypeChange}
                         />
@@ -132,6 +135,7 @@ function LocationFinder() {
                         <input
                             type="checkbox"
                             value="museum"
+                            className='mr-1'
                             checked={placeTypes.includes("museum")}
                             onChange={handlePlaceTypeChange}
                         />
@@ -141,6 +145,7 @@ function LocationFinder() {
                         <input
                             type="checkbox"
                             value="park"
+                            className='mr-1'
                             checked={placeTypes.includes("park")}
                             onChange={handlePlaceTypeChange}
                         />
@@ -150,6 +155,7 @@ function LocationFinder() {
                         <input
                             type="checkbox"
                             value="gym"
+                            className='mr-1'
                             checked={placeTypes.includes("gym")}
                             onChange={handlePlaceTypeChange}
                         />
@@ -159,6 +165,7 @@ function LocationFinder() {
                         <input
                             type="checkbox"
                             value="library"
+                            className='mr-1'
                             checked={placeTypes.includes("library")}
                             onChange={handlePlaceTypeChange}
                         />
@@ -166,7 +173,7 @@ function LocationFinder() {
                     </label>
                 </div>
 
-                <button onClick={handleSearch} className=" p-2 w-fit bg-blue-600 text-white rounded">
+                <button onClick={handleSearch} className=" p-2 w-fit bg-orange-400  text-stone-950 rounded-sm font-semibold">
                     Search Places
                 </button>
             </div>

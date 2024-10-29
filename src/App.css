@@ -14,6 +14,26 @@
     transition-delay: 250ms;
     opacity: 0;
 }
+input[type='range']{ accent-color: #fb923c; }
+input[type="checkbox"] {
+    appearance: none; /* Remove default checkbox styling */
+    width: 15px;
+    height: 15px;
+    background-color: transparent; /* Set background to grey */
+    border: 1px solid #fb923c;
+    cursor: pointer;
+  }
+  
+  input[type="checkbox"]:checked {
+    background-color: #fb923c; /* Change background color when checked */
+  }
+input[type="number"] {
+    background-color: transparent; /* Light grey background */
+    color: #fb923c; /* Text color */
+    border: 1px solid #fb923c; /* Optional: border styling */
+    padding: 0.5rem;
+    border-radius: 4px;
+  }
 .transition-locator-btn {
     transition: all 0.5s ease;
 }
