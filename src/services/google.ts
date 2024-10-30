@@ -1,12 +1,11 @@
-import { getUserLocation } from './geolocation';
 
 let map: google.maps.Map | null = null;
 let watcherId: number | null = null; // Store the watcher ID
 let latlng: [number, number];
-export const initMap = async () => {
+export const initMap = async (latlngcoords: [number, number]) => {
     try {
-        latlng = await getUserLocation();
-        const center = ({lat: latlng[0], lng: latlng[1]});
+        latlng = latlngcoords;
+        const center = { lat: latlng[0], lng: latlng[1] };
         map = new google.maps.Map(
             document.getElementById('map') as HTMLElement,
             {
@@ -83,11 +82,20 @@ export const addMarkers = (locations: Array<google.maps.LatLng | null>) => {
                 content: null,
             });
         }
-        
     }
 };
 
-type PlaceType = "restaurant" | "cafe" | "tourist_attraction" | "museum" | "park" | "hotel" | "shopping_mall" | "night_club" | "gym" | "library";
+type PlaceType =
+    | 'restaurant'
+    | 'cafe'
+    | 'tourist_attraction'
+    | 'museum'
+    | 'park'
+    | 'hotel'
+    | 'shopping_mall'
+    | 'night_club'
+    | 'gym'
+    | 'library';
 
 export const getPlaces = async (
     radius: number,
@@ -96,14 +104,16 @@ export const getPlaces = async (
     placeTypes: Array<PlaceType>
 ): Promise<Array<google.maps.places.PlaceResult>> => {
     const center = new google.maps.LatLng(latlng[0], latlng[1]);
-    const service = new google.maps.places.PlacesService(map as google.maps.Map);
+    const service = new google.maps.places.PlacesService(
+        map as google.maps.Map
+    );
 
     const createPlaceSearchRequests = (
         center: google.maps.LatLng,
         radius: number,
         placeTypes: Array<PlaceType>
     ): Array<google.maps.places.PlaceSearchRequest> => {
-        return placeTypes.map(type => ({
+        return placeTypes.map((type) => ({
             location: center,
             radius: radius,
             type: type,
@@ -115,34 +125,44 @@ export const getPlaces = async (
     const allResults: Array<google.maps.places.PlaceResult> = [];
 
     for (const request of placeRequests) {
-        const result = await new Promise<google.maps.places.PlaceResult | null>((resolve) => {
-            service.nearbySearch(request, (results, status) => {
-                if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-                    
-                    const filteredResults = results.filter(
-                        (place) => {
-                            const firstType = place.types && place.types.length > 0 ? place.types[0] : null;
+        const result = await new Promise<google.maps.places.PlaceResult | null>(
+            (resolve) => {
+                service.nearbySearch(request, (results, status) => {
+                    if (
+                        status === google.maps.places.PlacesServiceStatus.OK &&
+                        results
+                    ) {
+                        const filteredResults = results.filter((place) => {
+                            const firstType =
+                                place.types && place.types.length > 0
+                                    ? place.types[0]
+                                    : null;
                             return (
                                 (place.rating ?? 0) >= ratingMinimum &&
-                                (place.user_ratings_total ?? 0) >= reviewAmountMinimum &&
+                                (place.user_ratings_total ?? 0) >=
+                                    reviewAmountMinimum &&
                                 firstType === request.type
                             );
-                        }
-                    );
+                        });
 
-                    if (filteredResults.length > 0) {
-                        // Add all matching places for this type to the array
-                        resolve(
-                            filteredResults[Math.floor(Math.random() * filteredResults.length)]
-                        );
+                        if (filteredResults.length > 0) {
+                            // Add all matching places for this type to the array
+                            resolve(
+                                filteredResults[
+                                    Math.floor(
+                                        Math.random() * filteredResults.length
+                                    )
+                                ]
+                            );
+                        } else {
+                            resolve(null); // No places meeting criteria
+                        }
                     } else {
-                        resolve(null);  // No places meeting criteria
+                        resolve(null); // No places found
                     }
-                } else {
-                    resolve(null);  // No places found
-                }
-            });
-        });
+                });
+            }
+        );
 
         // Add result if found for this type
         if (result) allResults.push(result);
@@ -150,7 +170,7 @@ export const getPlaces = async (
 
     // If no results are found across all types, throw an error
     if (allResults.length === 0) {
-        throw new Error("No locations found.");
+        throw new Error('No locations found.');
     }
 
     return allResults;

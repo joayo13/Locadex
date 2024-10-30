@@ -1,4 +1,3 @@
-
 interface SliderProps {
     value: number;
     min: number;
@@ -8,10 +7,22 @@ interface SliderProps {
     label?: string;
 }
 
-const Slider: React.FC<SliderProps> = ({ value, min, max, step = 1, onChange, label }) => {
+const Slider: React.FC<SliderProps> = ({
+    value,
+    min,
+    max,
+    step = 1,
+    onChange,
+    label,
+}) => {
     return (
         <div className="slider-container">
-            {label && <label className="block mb-2">{label}: {value} m</label>}
+            {label && (
+                <label className="block mb-2">
+                    {label}:{' '}
+                    <p className="text-orange-400 inline-block">{value} m</p>
+                </label>
+            )}
             <input
                 type="range"
                 min={min}

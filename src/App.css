@@ -14,26 +14,40 @@
     transition-delay: 250ms;
     opacity: 0;
 }
-input[type='range']{ accent-color: #fb923c; }
-input[type="checkbox"] {
+.gm-style-iw {
+    color: #0c0a09; /* Darker text color */
+    font-weight: bold; /* Makes it stand out */
+}
+input[type='range'] {
+    accent-color: #fb923c;
+}
+input[type='checkbox'] {
     appearance: none; /* Remove default checkbox styling */
     width: 15px;
     height: 15px;
-    background-color: transparent; /* Set background to grey */
+    background-color: transparent;
     border: 1px solid #fb923c;
     cursor: pointer;
-  }
-  
-  input[type="checkbox"]:checked {
+    transition: all 0.2s;
+}
+
+input[type='checkbox']:checked {
     background-color: #fb923c; /* Change background color when checked */
-  }
-input[type="number"] {
-    background-color: transparent; /* Light grey background */
-    color: #fb923c; /* Text color */
-    border: 1px solid #fb923c; /* Optional: border styling */
+}
+input[type='number'] {
+    background-color: transparent;
+    color: #fb923c;
+    border: 1px solid #fb923c;
     padding: 0.5rem;
     border-radius: 4px;
-  }
+}
+input[type='text'] {
+    background-color: transparent;
+    color: #fb923c;
+    border: 1px solid #fb923c;
+    padding: 0.5rem;
+    border-radius: 4px;
+}
 .transition-locator-btn {
     transition: all 0.5s ease;
 }
