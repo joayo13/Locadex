@@ -23,11 +23,11 @@ function MainNav() {
     }
     return (
         <>
-            <nav className="bg-stone-900 shadow-lg text-stone-200 flex justify-between items-center pl-4 h-16 fixed w-full z-20">
+            <nav className="dark:bg-stone-900 bg-stone-200 shadow-lg dark:text-stone-200 text-stone-900 flex justify-between items-center pl-4 h-16 fixed w-full z-20">
                 <Link
                     to={'/'}
                     onClick={() => setMenuOpen(false)}
-                    className="text-xl playfair text-orange-400"
+                    className="text-xl playfair dark:text-orange-400 text-stone-900"
                 >
                     Locadex
                 </Link>
@@ -37,7 +37,7 @@ function MainNav() {
                 ></div>
                 <nav
                     aria-label="mobile-menu"
-                    className={`mobile-menu bg-stone-950 text-stone-200 p-4 ${menuOpen ? 'animate-mobile-menu-open' : 'animate-mobile-menu-close'}`}
+                    className={`mobile-menu dark:bg-stone-950 dark:text-stone-200 p-4 ${menuOpen ? 'animate-mobile-menu-open' : 'animate-mobile-menu-close'}`}
                 >
                     <div className="flex flex-col items-start gap-8">
                         <ul className="flex flex-col items-start gap-8">
@@ -76,7 +76,7 @@ function MainNav() {
                 </button>
             </nav>
             {/* to create a consistent margin at top for any content or pages so we don't have to do it manually for every page */}
-            <div className="h-16 w-full bg-stone-950"></div>
+            <div className="h-16 w-full dark:bg-stone-950"></div>
         </>
     );
 }

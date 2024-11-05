@@ -30,6 +30,9 @@ input[type='checkbox'] {
     cursor: pointer;
     transition: all 0.2s;
 }
+input[type='radio'] {
+    accent-color: #fb923c;
+}
 
 input[type='checkbox']:checked {
     background-color: #fb923c; /* Change background color when checked */

@@ -1,4 +1,5 @@
 import Slider from '../components/Slider';
+import UseLocationPopup from '../components/UseLocationPopup';
 import { useError } from '../contexts/ErrorContext';
 import { getUserLocation } from '../services/geolocation';
 import {
@@ -31,14 +32,26 @@ function LocationFinder() {
         'restaurant',
     ]); // Default place type
     const [useGeolocation, setUseGeolocation] = useState(false);
-    const [latitude, setLatitude] = useState<number | null>(null);
-    const [longitude, setLongitude] = useState<number | null>(null);
-    const [latLngInput, setLatLngInput] = useState<string>('');
+    const [useLocationPopup, setUseLocationPopup] = useState(false);
     const { setError } = useError();
     const setErrorRef = useRef(setError);
-
+    useEffect(() => {
+        if(localStorage.getItem('useLocation') === 'true') {
+            setUseGeolocation(true)
+            return
+        }
+        else if(localStorage.getItem('useLocation') === 'false') {
+            //since usegeolocation is false by default we can just return outta here
+            return
+        }
+        else {
+            //here we'll initiate popup since they haven't been to site before 
+            setUseLocationPopup(true)
+        }
+    },[])
     useEffect(() => {
         const initializeMapAndPosition = async () => {
+            
             try {
                 // Use a timeout to delay the execution of the following code
                 await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -48,10 +61,7 @@ function LocationFinder() {
                 ];
                 if (useGeolocation) {
                     latlng = await getUserLocation();
-                } else if (latitude !== null && longitude !== null) {
-                    latlng = [latitude, longitude];
                 }
-
                 await initMap(latlng);
                 if (useGeolocation) {
                     await initUserPosition();
@@ -64,7 +74,7 @@ function LocationFinder() {
         };
 
         initializeMapAndPosition();
-    }, [useGeolocation, latLngInput, latitude, longitude]);
+    }, [useGeolocation]);
 
     const handleSearch = async () => {
         setLoading(true);
@@ -75,6 +85,7 @@ function LocationFinder() {
                 reviewAmountMinimum,
                 placeTypes
             );
+            await results;
             // Handle the results (e.g., display them, update state, etc.)
             console.log(results);
             addMarkers(
@@ -100,82 +111,12 @@ function LocationFinder() {
         }
     };
 
-    const handleToggleGeolocation = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        setUseGeolocation(event.target.checked);
-        if (event.target.checked) {
-            setLatitude(null);
-            setLongitude(null);
-            setLatLngInput('');
-        }
-    };
 
-    const handleLatLngInputChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-    ) => {
-        const value = event.target.value;
-        setLatLngInput(value);
-
-        // Try to parse the latitude and longitude from the input
-        const [lat, lng] = value
-            .split(',')
-            .map((coord) => parseFloat(coord.trim()));
-
-        if (!isNaN(lat) && !isNaN(lng)) {
-            setLatitude(lat);
-            setLongitude(lng);
-        } else {
-            setLatitude(null);
-            setLongitude(null);
-        }
-    };
-    const UserPreferences = () => {
-        return (
-            <div>
-                <h2 className="text-orange-400 text-2xl playfair underline">
-                    User Preferences
-                </h2>
-
-                {/* Geolocation Toggle */}
-                <div className="mt-2">
-                    <input
-                        id="geolocation-toggle"
-                        type="checkbox"
-                        checked={useGeolocation}
-                        onChange={handleToggleGeolocation}
-                        className="mr-1"
-                    />
-                    <label htmlFor="geolocation-toggle">
-                        Use Geolocation
-                    </label>
-                </div>
-
-                {/* Custom Latitude and Longitude Input */}
-                {!useGeolocation && (
-                    <div>
-                        <label htmlFor="latLng">Latitude, Longitude:</label>
-                        <input
-                            id="latLng"
-                            type="text"
-                            value={latLngInput}
-                            onChange={handleLatLngInputChange}
-                            placeholder="Enter as lat, lng"
-                            className="mt-2 block"
-                        />
-                    </div>
-                )}
-            </div>
-        );
-    };
 
     return (
         <div className="bg-stone-950 text-stone-200 flex flex-col lg:flex-row">
+            {useLocationPopup ? <UseLocationPopup setUseGeolocation={setUseGeolocation} setUseLocationPopup={setUseLocationPopup}/> : null}
             <div className="flex flex-col gap-2 mt-2 px-4">
-                <UserPreferences />
-                <h2 className="text-orange-400 text-2xl playfair underline">
-                    Search Parameters
-                </h2>
                 <Slider
                     value={radius}
                     min={100}

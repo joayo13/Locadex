@@ -166,11 +166,15 @@ export const getPlaces = async (
 
         // Add result if found for this type
         if (result) allResults.push(result);
+        console.log(allResults)
     }
 
     // If no results are found across all types, throw an error
     if (allResults.length === 0) {
         throw new Error('No locations found.');
+    }
+    if (allResults.length < placeRequests.length) {
+        throw new Error('Some place types could not be found.')
     }
 
     return allResults;
