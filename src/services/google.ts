@@ -97,6 +97,9 @@ export const addMarkers = (
             }
         }
     }
+    else {
+        throw new Error("Could not add marker to map, try again.")
+    }
 };
 
 // Function to remove markers
@@ -190,8 +193,7 @@ export const getPlaces = async (
         );
 
         // Add result if found for this type
-        if (result) allResults.push(result);
-        console.log(allResults);
+        if (result !== null) allResults.push(result);
     }
 
     // If no results are found across all types, throw an error
@@ -199,6 +201,7 @@ export const getPlaces = async (
         throw new Error('No locations found.');
     }
     else if (allResults.length < placeRequests.length) {
+        console.log(allResults)
         throw new Error('Some place types could not be found.');
     }
 

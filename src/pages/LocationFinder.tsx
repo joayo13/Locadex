@@ -100,20 +100,21 @@ function LocationFinder() {
                 ratingMinimum,
                 reviewAmountMinimum,
                 placeTypes
-            );
-            await results;
+            ).then((results) => {
+                addMarkers(
+                    results.map((result) =>
+                        result.geometry?.location && result.types?.length
+                            ? {
+                                  latlng: result.geometry?.location,
+                                  icon: selectIconFromFirstType(result.types[0]),
+                              }
+                            : null
+                    )
+                );
+            })
             // Handle the results (e.g., display them, update state, etc.)
             console.log(results);
-            addMarkers(
-                results.map((result) =>
-                    result.geometry?.location && result.types?.length
-                        ? {
-                              latlng: result.geometry?.location,
-                              icon: selectIconFromFirstType(result.types[0]),
-                          }
-                        : null
-                )
-            );
+            
         } catch (error) {
             if (error instanceof Error) setError(error.message);
         } finally {
