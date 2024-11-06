@@ -7,6 +7,7 @@ import {
     getPlaces,
     initMap,
     initUserPosition,
+    removeMarkers,
 } from '../services/google';
 import LoadingScreen from './LoadingScreen';
 import { useEffect, useRef, useState } from 'react';
@@ -17,9 +18,6 @@ type PlaceType =
     | 'tourist_attraction'
     | 'museum'
     | 'park'
-    | 'hotel'
-    | 'shopping_mall'
-    | 'night_club'
     | 'gym'
     | 'library';
 
@@ -28,30 +26,25 @@ function LocationFinder() {
     const [radius, setRadius] = useState(1000); // Default radius in meters
     const [ratingMinimum, setRatingMinimum] = useState(3); // Default rating
     const [reviewAmountMinimum, setReviewAmountMinimum] = useState(10); // Default review count
-    const [placeTypes, setPlaceTypes] = useState<Array<PlaceType>>([
-        'restaurant',
-    ]); // Default place type
+    const [placeTypes, setPlaceTypes] = useState<Array<PlaceType>>([]); // Default place type
     const [useGeolocation, setUseGeolocation] = useState(false);
     const [useLocationPopup, setUseLocationPopup] = useState(false);
     const { setError } = useError();
     const setErrorRef = useRef(setError);
     useEffect(() => {
-        if(localStorage.getItem('useLocation') === 'true') {
-            setUseGeolocation(true)
-            return
-        }
-        else if(localStorage.getItem('useLocation') === 'false') {
+        if (localStorage.getItem('useLocation') === 'true') {
+            setUseGeolocation(true);
+            return;
+        } else if (localStorage.getItem('useLocation') === 'false') {
             //since usegeolocation is false by default we can just return outta here
-            return
+            return;
+        } else {
+            //here we'll initiate popup since they haven't been to site before
+            setUseLocationPopup(true);
         }
-        else {
-            //here we'll initiate popup since they haven't been to site before 
-            setUseLocationPopup(true)
-        }
-    },[])
+    }, []);
     useEffect(() => {
         const initializeMapAndPosition = async () => {
-            
             try {
                 // Use a timeout to delay the execution of the following code
                 await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -76,7 +69,30 @@ function LocationFinder() {
         initializeMapAndPosition();
     }, [useGeolocation]);
 
+    function selectIconFromFirstType(type: string): string {
+        switch (type) {
+            case 'restaurant':
+                return '/icons/restaurant.png';
+            case 'cafe':
+                return '/icons/cafe.png';
+            case 'park':
+                return '/icons/park.png';
+            case 'museum':
+                return '/icons/museum.png';
+            case 'tourist_attraction':
+                return '/icons/tourist-attraction.png';
+            case 'gym':
+                return '/icons/gym.png';
+            case 'library':
+                return '/icons/library.png';
+            // Add more cases as needed
+            default:
+                return '/icons/tourist-attraction.png'; // Fallback icon if type is unrecognized
+        }
+    }
+
     const handleSearch = async () => {
+        removeMarkers();
         setLoading(true);
         try {
             const results = await getPlaces(
@@ -89,7 +105,14 @@ function LocationFinder() {
             // Handle the results (e.g., display them, update state, etc.)
             console.log(results);
             addMarkers(
-                results.map((result) => result.geometry?.location ?? null)
+                results.map((result) =>
+                    result.geometry?.location && result.types?.length
+                        ? {
+                              latlng: result.geometry?.location,
+                              icon: selectIconFromFirstType(result.types[0]),
+                          }
+                        : null
+                )
             );
         } catch (error) {
             if (error instanceof Error) setError(error.message);
@@ -111,11 +134,14 @@ function LocationFinder() {
         }
     };
 
-
-
     return (
         <div className="bg-stone-950 text-stone-200 flex flex-col lg:flex-row">
-            {useLocationPopup ? <UseLocationPopup setUseGeolocation={setUseGeolocation} setUseLocationPopup={setUseLocationPopup}/> : null}
+            {useLocationPopup ? (
+                <UseLocationPopup
+                    setUseGeolocation={setUseGeolocation}
+                    setUseLocationPopup={setUseLocationPopup}
+                />
+            ) : null}
             <div className="flex flex-col gap-2 mt-2 px-4">
                 <Slider
                     value={radius}

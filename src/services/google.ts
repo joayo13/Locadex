@@ -1,4 +1,3 @@
-
 let map: google.maps.Map | null = null;
 let watcherId: number | null = null; // Store the watcher ID
 let latlng: [number, number];
@@ -72,17 +71,40 @@ const updateUserPosition = (pos: GeolocationPosition) => {
         content: markerContent,
     });
 };
-export const addMarkers = (locations: Array<google.maps.LatLng | null>) => {
+const markers: google.maps.marker.AdvancedMarkerElement[] = [];
+
+// Function to add markers
+export const addMarkers = (
+    locations: Array<{ latlng: google.maps.LatLng; icon: string } | null>
+) => {
     if (locations && map) {
         for (let location of locations) {
-            new google.maps.marker.AdvancedMarkerElement({
-                position: location,
-                map: map,
-                title: 'test',
-                content: null,
-            });
+            if (location) {
+                const iconElement = document.createElement('img');
+                iconElement.src = location.icon;
+                iconElement.alt = 'Location Icon';
+                iconElement.style.width = '24px';
+                iconElement.style.height = '24px';
+
+                const marker = new google.maps.marker.AdvancedMarkerElement({
+                    position: location.latlng,
+                    map: map,
+                    title: 'test',
+                    content: iconElement,
+                });
+
+                markers.push(marker); // Store marker reference
+            }
         }
     }
+};
+
+// Function to remove markers
+export const removeMarkers = () => {
+    for (let marker of markers) {
+        marker.map = null; // Remove each marker from the map
+    }
+    markers.length = 0; // Clear the array of markers
 };
 
 type PlaceType =
@@ -122,6 +144,9 @@ export const getPlaces = async (
     };
 
     const placeRequests = createPlaceSearchRequests(center, radius, placeTypes);
+    if (!placeTypes.length) {
+        throw new Error('No Place Types Selected.');
+    }
     const allResults: Array<google.maps.places.PlaceResult> = [];
 
     for (const request of placeRequests) {
@@ -166,15 +191,15 @@ export const getPlaces = async (
 
         // Add result if found for this type
         if (result) allResults.push(result);
-        console.log(allResults)
+        console.log(allResults);
     }
 
     // If no results are found across all types, throw an error
     if (allResults.length === 0) {
         throw new Error('No locations found.');
     }
-    if (allResults.length < placeRequests.length) {
-        throw new Error('Some place types could not be found.')
+    else if (allResults.length < placeRequests.length) {
+        throw new Error('Some place types could not be found.');
     }
 
     return allResults;
