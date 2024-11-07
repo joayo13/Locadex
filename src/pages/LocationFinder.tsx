@@ -92,33 +92,42 @@ function LocationFinder() {
     }
 
     const handleSearch = async () => {
-        removeMarkers();
-        setLoading(true);
+        removeMarkers(); // Remove any previous markers
+        setLoading(true); // Set loading state to true
         try {
-            const results = await getPlaces(
+            const { places, error } = await getPlaces(
                 radius,
                 ratingMinimum,
                 reviewAmountMinimum,
                 placeTypes
-            ).then((results) => {
+            );
+    
+            // Process the places (add markers) even if there's an error message
+            if (places.length > 0) {
                 addMarkers(
-                    results.map((result) =>
+                    places.map((result) =>
                         result.geometry?.location && result.types?.length
                             ? {
-                                  latlng: result.geometry?.location,
+                                  latlng: result.geometry.location,
                                   icon: selectIconFromFirstType(result.types[0]),
                               }
                             : null
                     )
                 );
-            })
-            // Handle the results (e.g., display them, update state, etc.)
-            console.log(results);
-            
+                console.log(places); // Log places for debugging
+            }
+    
+            // Handle error case (if error exists)
+            if (error) {
+                setError(error); // Set the error message to state
+                console.log(error); // Optionally log the error for debugging or user feedback
+            }
+    
         } catch (error) {
+            // Handle unexpected errors that occur during the API call
             if (error instanceof Error) setError(error.message);
         } finally {
-            setLoading(false);
+            setLoading(false); // Set loading state to false after completion
         }
     };
 

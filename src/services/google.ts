@@ -80,17 +80,27 @@ export const addMarkers = (
     if (locations && map) {
         for (let location of locations) {
             if (location) {
+                //we create a const copy of map or else eslint will complain that we are referencing a changable variable in a loop
+                const mapCopy = map
                 const iconElement = document.createElement('img');
                 iconElement.src = location.icon;
                 iconElement.alt = 'Location Icon';
-                iconElement.style.width = '24px';
-                iconElement.style.height = '24px';
+                iconElement.style.width = '32px';
+                iconElement.style.height = '32px';
 
                 const marker = new google.maps.marker.AdvancedMarkerElement({
                     position: location.latlng,
                     map: map,
                     title: 'test',
                     content: iconElement,
+                });
+                const infoWindow = new google.maps.InfoWindow({
+                    content: `<h1>Place</h1><p>Come on down !</p>`,
+                });
+                
+                // Add event listener to marker for click event
+                marker.addListener("click", () => {
+                    infoWindow.open(mapCopy, marker); // Open info window on marker click
                 });
 
                 markers.push(marker); // Store marker reference
@@ -122,66 +132,49 @@ type PlaceType =
     | 'gym'
     | 'library';
 
-export const getPlaces = async (
-    radius: number,
-    ratingMinimum: number,
-    reviewAmountMinimum: number,
-    placeTypes: Array<PlaceType>
-): Promise<Array<google.maps.places.PlaceResult>> => {
-    const center = new google.maps.LatLng(latlng[0], latlng[1]);
-    const service = new google.maps.places.PlacesService(
-        map as google.maps.Map
-    );
-
-    const createPlaceSearchRequests = (
-        center: google.maps.LatLng,
+    export const getPlaces = async (
         radius: number,
+        ratingMinimum: number,
+        reviewAmountMinimum: number,
         placeTypes: Array<PlaceType>
-    ): Array<google.maps.places.PlaceSearchRequest> => {
-        return placeTypes.map((type) => ({
-            location: center,
-            radius: radius,
-            type: type,
-            language: 'en-US',
-        }));
-    };
-
-    const placeRequests = createPlaceSearchRequests(center, radius, placeTypes);
-    if (!placeTypes.length) {
-        throw new Error('No Place Types Selected.');
-    }
-    const allResults: Array<google.maps.places.PlaceResult> = [];
-
-    for (const request of placeRequests) {
-        const result = await new Promise<google.maps.places.PlaceResult | null>(
-            (resolve) => {
+    ): Promise<{ places: Array<google.maps.places.PlaceResult>, error?: string }> => {
+        const center = new google.maps.LatLng(latlng[0], latlng[1]);
+        const service = new google.maps.places.PlacesService(map as google.maps.Map);
+    
+        const createPlaceSearchRequests = (
+            center: google.maps.LatLng,
+            radius: number,
+            placeTypes: Array<PlaceType>
+        ): Array<google.maps.places.PlaceSearchRequest> => {
+            return placeTypes.map((type) => ({
+                location: center,
+                radius: radius,
+                type: type,
+                language: 'en-US',
+            }));
+        };
+    
+        const placeRequests = createPlaceSearchRequests(center, radius, placeTypes);
+        if (!placeTypes.length) {
+            return { places: [], error: 'No Place Types Selected.' }; // Return error, but still return an empty places array
+        }
+        const allResults: Array<google.maps.places.PlaceResult> = [];
+    
+        for (const request of placeRequests) {
+            const result = await new Promise<google.maps.places.PlaceResult | null>((resolve) => {
                 service.nearbySearch(request, (results, status) => {
-                    if (
-                        status === google.maps.places.PlacesServiceStatus.OK &&
-                        results
-                    ) {
+                    if (status === google.maps.places.PlacesServiceStatus.OK && results) {
                         const filteredResults = results.filter((place) => {
-                            const firstType =
-                                place.types && place.types.length > 0
-                                    ? place.types[0]
-                                    : null;
+                            const firstType = place.types && place.types.length > 0 ? place.types[0] : null;
                             return (
                                 (place.rating ?? 0) >= ratingMinimum &&
-                                (place.user_ratings_total ?? 0) >=
-                                    reviewAmountMinimum &&
+                                (place.user_ratings_total ?? 0) >= reviewAmountMinimum &&
                                 firstType === request.type
                             );
                         });
-
+    
                         if (filteredResults.length > 0) {
-                            // Add all matching places for this type to the array
-                            resolve(
-                                filteredResults[
-                                    Math.floor(
-                                        Math.random() * filteredResults.length
-                                    )
-                                ]
-                            );
+                            resolve(filteredResults[Math.floor(Math.random() * filteredResults.length)]);
                         } else {
                             resolve(null); // No places meeting criteria
                         }
@@ -189,21 +182,23 @@ export const getPlaces = async (
                         resolve(null); // No places found
                     }
                 });
-            }
-        );
-
-        // Add result if found for this type
-        if (result !== null) allResults.push(result);
-    }
-
-    // If no results are found across all types, throw an error
-    if (allResults.length === 0) {
-        throw new Error('No locations found.');
-    }
-    else if (allResults.length < placeRequests.length) {
-        console.log(allResults)
-        throw new Error('Some place types could not be found.');
-    }
-
-    return allResults;
-};
+            });
+    
+            // Add result if found for this type
+            if (result !== null) allResults.push(result);
+        }
+    
+        // If no results are found across all types, return error information
+        if (allResults.length === 0) {
+            return { places: [], error: 'No locations found.' }; // No locations found
+        }
+    
+        // If some place types couldn't be found, return the results and provide a warning
+        if (allResults.length < placeRequests.length) {
+            console.log(allResults); // Log the results for debugging
+            return { places: allResults, error: 'Some place types could not be found.' }; // Partial results with error message
+        }
+    
+        // If everything is successful, return the results without error
+        return { places: allResults };
+    };

@@ -10,12 +10,12 @@ export const getUserLocation = (): Promise<[number, number]> => {
                 },
                 (error) => {
                     // Pass a specific error message to the caller
-                    reject(new Error(getGeolocationErrorMessage(error)));
+                    throw new Error(getGeolocationErrorMessage(error));
                 }
             );
         } else {
             // Reject with an error if geolocation is not supported
-            reject(new Error('Geolocation not supported by this browser.'));
+            throw new Error('Geolocation not supported by this browser.');
         }
     });
 };
