@@ -110,6 +110,10 @@ function LocationFinder() {
                             ? {
                                   latlng: result.geometry.location,
                                   icon: selectIconFromFirstType(result.types[0]),
+                                  name: result.name ?? "Unknown Name", // Default name
+                                  address: result.vicinity ?? "Address not available", // Default address
+                                  rating: result.rating ?? 0, // Default rating
+                                  reviewAmount: result.user_ratings_total ?? 0 // Default review count
                               }
                             : null
                     )

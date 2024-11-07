@@ -75,40 +75,74 @@ const markers: google.maps.marker.AdvancedMarkerElement[] = [];
 
 // Function to add markers
 export const addMarkers = (
-    locations: Array<{ latlng: google.maps.LatLng; icon: string } | null>
+    locations: Array<{
+        latlng: google.maps.LatLng;
+        icon: string;
+        name: string;
+        address: string;
+        rating: number;
+        reviewAmount: number;
+    } | null>
 ) => {
     if (locations && map) {
         for (let location of locations) {
             if (location) {
-                //we create a const copy of map or else eslint will complain that we are referencing a changable variable in a loop
-                const mapCopy = map
+                // Create a copy of the map variable for safe referencing in the loop
+                const mapCopy = map;
+
+                // Create the icon element for the marker
                 const iconElement = document.createElement('img');
                 iconElement.src = location.icon;
                 iconElement.alt = 'Location Icon';
                 iconElement.style.width = '32px';
                 iconElement.style.height = '32px';
 
+                // Create the marker with the specified position, map, and icon
                 const marker = new google.maps.marker.AdvancedMarkerElement({
                     position: location.latlng,
                     map: map,
-                    title: 'test',
+                    title: location.name,
                     content: iconElement,
                 });
+
+                // Create content for the InfoWindow with dynamic data
+                const infoWindowContent = document.createElement('div');
+                infoWindowContent.className = 'custom-info-window';
+
+                const nameElement = document.createElement('h1');
+                nameElement.textContent = location.name;
+
+                const addressElement = document.createElement('p');
+                addressElement.textContent = `Address: ${location.address}`;
+
+                const ratingElement = document.createElement('p');
+                ratingElement.textContent = `Rating: ${location.rating ?? 'N/A'}`;
+
+                const reviewAmountElement = document.createElement('p');
+                reviewAmountElement.textContent = `Reviews: ${location.reviewAmount ?? 'N/A'}`;
+
+                // Append elements to the content container
+                infoWindowContent.appendChild(nameElement);
+                infoWindowContent.appendChild(addressElement);
+                infoWindowContent.appendChild(ratingElement);
+                infoWindowContent.appendChild(reviewAmountElement);
+
+                // Create the InfoWindow and set its content
                 const infoWindow = new google.maps.InfoWindow({
-                    content: `<h1>Place</h1><p>Come on down !</p>`,
-                });
-                
-                // Add event listener to marker for click event
-                marker.addListener("click", () => {
-                    infoWindow.open(mapCopy, marker); // Open info window on marker click
+                    content: infoWindowContent,
                 });
 
-                markers.push(marker); // Store marker reference
+                // Add event listener to the marker for the click event to open InfoWindow
+                marker.addListener("click", () => {
+                    infoWindow.open(mapCopy, marker);
+                });
+
+                // Store the marker reference
+                markers.push(marker);
             }
         }
-    }
-    else {
-        throw new Error("Could not add marker to map, try again.")
+    } else {
+        throw new Error("Could not add marker to map, try again.");
     }
 };
 
