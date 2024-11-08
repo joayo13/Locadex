@@ -110,6 +110,7 @@ export const addMarkers = (
                 infoWindowContent.className = 'custom-info-window';
 
                 const nameElement = document.createElement('h1');
+                nameElement.className = 'info-window-title'
                 nameElement.textContent = location.name;
 
                 const addressElement = document.createElement('p');

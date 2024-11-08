@@ -14,6 +14,10 @@
     transition-delay: 250ms;
     opacity: 0;
 }
+.info-window-title {
+    font-weight: bold;
+    font-size: 20px;
+}
 .gm-style-iw {
     color: #0c0a09; /* Darker text color */
     font-weight: bold; /* Makes it stand out */
