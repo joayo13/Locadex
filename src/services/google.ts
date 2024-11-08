@@ -167,57 +167,64 @@ type PlaceType =
     | 'gym'
     | 'library';
 
+    async function applyFiltersToRequest(request: google.maps.places.PlaceSearchRequest, ratingMinimum: number, reviewAmountMinimum: number): Promise<google.maps.places.PlaceResult | null> {
+        const service = new google.maps.places.PlacesService(map as google.maps.Map);
+        const result = await new Promise<google.maps.places.PlaceResult | null>((resolve) => {
+            service.nearbySearch(request, (results, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+                    const filteredResults = results.filter((place) => {
+                        const firstType = place.types && place.types.length > 0 ? place.types[0] : null;
+                        return (
+                            (place.rating ?? 0) >= ratingMinimum &&
+                            (place.user_ratings_total ?? 0) >= reviewAmountMinimum &&
+                            firstType === request.type
+                        );
+                    });
+
+                    if (filteredResults.length > 0) {
+                        resolve(filteredResults[Math.floor(Math.random() * filteredResults.length)]);
+                    } else {
+                        resolve(null); // No places meeting criteria
+                    }
+                } else {
+                    resolve(null); // No places found
+                }
+            });
+        });
+        return result
+    }
+    const createPlaceSearchRequests = (
+        center: google.maps.LatLng,
+        radius: number,
+        placeTypes: Array<PlaceType>
+    ): Array<google.maps.places.PlaceSearchRequest> => {
+        return placeTypes.map((type) => ({
+            location: center,
+            radius: radius,
+            type: type,
+            language: 'en-US',
+        }));
+    };
+
     export const getPlaces = async (
         radius: number,
         ratingMinimum: number,
         reviewAmountMinimum: number,
         placeTypes: Array<PlaceType>
     ): Promise<{ places: Array<google.maps.places.PlaceResult>, error?: string }> => {
+        if(!latlng) {
+            throw new Error('Must wait for map to initialize before sending place requests.')
+        }
         const center = new google.maps.LatLng(latlng[0], latlng[1]);
-        const service = new google.maps.places.PlacesService(map as google.maps.Map);
-    
-        const createPlaceSearchRequests = (
-            center: google.maps.LatLng,
-            radius: number,
-            placeTypes: Array<PlaceType>
-        ): Array<google.maps.places.PlaceSearchRequest> => {
-            return placeTypes.map((type) => ({
-                location: center,
-                radius: radius,
-                type: type,
-                language: 'en-US',
-            }));
-        };
     
         const placeRequests = createPlaceSearchRequests(center, radius, placeTypes);
         if (!placeTypes.length) {
-            return { places: [], error: 'No Place Types Selected.' }; // Return error, but still return an empty places array
+            throw new Error('No Place Types Selected.')
         }
         const allResults: Array<google.maps.places.PlaceResult> = [];
     
         for (const request of placeRequests) {
-            const result = await new Promise<google.maps.places.PlaceResult | null>((resolve) => {
-                service.nearbySearch(request, (results, status) => {
-                    if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-                        const filteredResults = results.filter((place) => {
-                            const firstType = place.types && place.types.length > 0 ? place.types[0] : null;
-                            return (
-                                (place.rating ?? 0) >= ratingMinimum &&
-                                (place.user_ratings_total ?? 0) >= reviewAmountMinimum &&
-                                firstType === request.type
-                            );
-                        });
-    
-                        if (filteredResults.length > 0) {
-                            resolve(filteredResults[Math.floor(Math.random() * filteredResults.length)]);
-                        } else {
-                            resolve(null); // No places meeting criteria
-                        }
-                    } else {
-                        resolve(null); // No places found
-                    }
-                });
-            });
+            const result = await applyFiltersToRequest(request, ratingMinimum, reviewAmountMinimum)
     
             // Add result if found for this type
             if (result !== null) allResults.push(result);
@@ -225,13 +232,13 @@ type PlaceType =
     
         // If no results are found across all types, return error information
         if (allResults.length === 0) {
-            return { places: [], error: 'No locations found.' }; // No locations found
+            throw new Error('No Results Found. Try increasing Search Radius.')
         }
     
         // If some place types couldn't be found, return the results and provide a warning
         if (allResults.length < placeRequests.length) {
             console.log(allResults); // Log the results for debugging
-            return { places: allResults, error: 'Some place types could not be found.' }; // Partial results with error message
+            return { places: allResults, error: 'Some place types could not be found and have been omitted.' }; // Partial results with error message
         }
     
         // If everything is successful, return the results without error
