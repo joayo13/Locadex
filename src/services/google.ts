@@ -225,7 +225,6 @@ type PlaceType =
     
         for (const request of placeRequests) {
             const result = await applyFiltersToRequest(request, ratingMinimum, reviewAmountMinimum)
-    
             // Add result if found for this type
             if (result !== null) allResults.push(result);
         }
