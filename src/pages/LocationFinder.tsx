@@ -46,7 +46,6 @@ function LocationFinder() {
     useEffect(() => {
         const initializeMapAndPosition = async () => {
             try {
-                await new Promise((resolve) => setTimeout(resolve, 0));
 
                 let latlng: [number, number] = [
                     51.50737789462524, -0.12766368781412313,

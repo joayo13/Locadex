@@ -3,9 +3,13 @@ let watcherId: number | null = null; // Store the watcher ID
 let latlng: [number, number];
 export const initMap = async (latlngcoords: [number, number]) => {
     try {
+        const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
+        await google.maps.importLibrary("marker");
+        await google.maps.importLibrary("places");
+        
         latlng = latlngcoords;
         const center = { lat: latlng[0], lng: latlng[1] };
-        map = new google.maps.Map(
+        map = new Map(
             document.getElementById('map') as HTMLElement,
             {
                 center: center,
