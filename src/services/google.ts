@@ -3,20 +3,19 @@ let watcherId: number | null = null; // Store the watcher ID
 let latlng: [number, number];
 export const initMap = async (latlngcoords: [number, number]) => {
     try {
-        const { Map } = await google.maps.importLibrary("maps") as google.maps.MapsLibrary;
-        await google.maps.importLibrary("marker");
-        await google.maps.importLibrary("places");
-        
+        const { Map } = (await google.maps.importLibrary(
+            'maps'
+        )) as google.maps.MapsLibrary;
+        await google.maps.importLibrary('marker');
+        await google.maps.importLibrary('places');
+
         latlng = latlngcoords;
         const center = { lat: latlng[0], lng: latlng[1] };
-        map = new Map(
-            document.getElementById('map') as HTMLElement,
-            {
-                center: center,
-                zoom: 13,
-                mapId: '7c4573adc746c106',
-            }
-        );
+        map = new Map(document.getElementById('map') as HTMLElement, {
+            center: center,
+            zoom: 13,
+            mapId: '7c4573adc746c106',
+        });
     } catch (error) {
         if (error instanceof Error) {
             throw error;
@@ -114,7 +113,7 @@ export const addMarkers = (
                 infoWindowContent.className = 'custom-info-window';
 
                 const nameElement = document.createElement('h1');
-                nameElement.className = 'info-window-title'
+                nameElement.className = 'info-window-title';
                 nameElement.textContent = location.name;
 
                 const addressElement = document.createElement('p');
@@ -138,7 +137,7 @@ export const addMarkers = (
                 });
 
                 // Add event listener to the marker for the click event to open InfoWindow
-                marker.addListener("click", () => {
+                marker.addListener('click', () => {
                     infoWindow.open(mapCopy, marker);
                 });
 
@@ -147,7 +146,7 @@ export const addMarkers = (
             }
         }
     } else {
-        throw new Error("Could not add marker to map, try again.");
+        throw new Error('Could not add marker to map, try again.');
     }
 };
 
@@ -171,22 +170,42 @@ type PlaceType =
     | 'gym'
     | 'library';
 
-    async function applyFiltersToRequest(request: google.maps.places.PlaceSearchRequest, ratingMinimum: number, reviewAmountMinimum: number): Promise<google.maps.places.PlaceResult | null> {
-        const service = new google.maps.places.PlacesService(map as google.maps.Map);
-        const result = await new Promise<google.maps.places.PlaceResult | null>((resolve) => {
+async function applyFiltersToRequest(
+    request: google.maps.places.PlaceSearchRequest,
+    ratingMinimum: number,
+    reviewAmountMinimum: number
+): Promise<google.maps.places.PlaceResult | null> {
+    const service = new google.maps.places.PlacesService(
+        map as google.maps.Map
+    );
+    const result = await new Promise<google.maps.places.PlaceResult | null>(
+        (resolve) => {
             service.nearbySearch(request, (results, status) => {
-                if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+                if (
+                    status === google.maps.places.PlacesServiceStatus.OK &&
+                    results
+                ) {
                     const filteredResults = results.filter((place) => {
-                        const firstType = place.types && place.types.length > 0 ? place.types[0] : null;
+                        const firstType =
+                            place.types && place.types.length > 0
+                                ? place.types[0]
+                                : null;
                         return (
                             (place.rating ?? 0) >= ratingMinimum &&
-                            (place.user_ratings_total ?? 0) >= reviewAmountMinimum &&
+                            (place.user_ratings_total ?? 0) >=
+                                reviewAmountMinimum &&
                             firstType === request.type
                         );
                     });
 
                     if (filteredResults.length > 0) {
-                        resolve(filteredResults[Math.floor(Math.random() * filteredResults.length)]);
+                        resolve(
+                            filteredResults[
+                                Math.floor(
+                                    Math.random() * filteredResults.length
+                                )
+                            ]
+                        );
                     } else {
                         resolve(null); // No places meeting criteria
                     }
@@ -194,56 +213,69 @@ type PlaceType =
                     resolve(null); // No places found
                 }
             });
-        });
-        return result
-    }
-    const createPlaceSearchRequests = (
-        center: google.maps.LatLng,
-        radius: number,
-        placeTypes: Array<PlaceType>
-    ): Array<google.maps.places.PlaceSearchRequest> => {
-        return placeTypes.map((type) => ({
-            location: center,
-            radius: radius,
-            type: type,
-            language: 'en-US',
-        }));
-    };
+        }
+    );
+    return result;
+}
+const createPlaceSearchRequests = (
+    center: google.maps.LatLng,
+    radius: number,
+    placeTypes: Array<PlaceType>
+): Array<google.maps.places.PlaceSearchRequest> => {
+    return placeTypes.map((type) => ({
+        location: center,
+        radius: radius,
+        type: type,
+        language: 'en-US',
+    }));
+};
 
-    export const getPlaces = async (
-        radius: number,
-        ratingMinimum: number,
-        reviewAmountMinimum: number,
-        placeTypes: Array<PlaceType>
-    ): Promise<{ places: Array<google.maps.places.PlaceResult>, error?: string }> => {
-        if(!latlng) {
-            throw new Error('Must wait for map to initialize before sending place requests.')
-        }
-        const center = new google.maps.LatLng(latlng[0], latlng[1]);
-    
-        const placeRequests = createPlaceSearchRequests(center, radius, placeTypes);
-        if (!placeTypes.length) {
-            throw new Error('No Place Types Selected.')
-        }
-        const allResults: Array<google.maps.places.PlaceResult> = [];
-    
-        for (const request of placeRequests) {
-            const result = await applyFiltersToRequest(request, ratingMinimum, reviewAmountMinimum)
-            // Add result if found for this type
-            if (result !== null) allResults.push(result);
-        }
-    
-        // If no results are found across all types, return error information
-        if (allResults.length === 0) {
-            throw new Error('No Results Found. Try increasing Search Radius.')
-        }
-    
-        // If some place types couldn't be found, return the results and provide a warning
-        if (allResults.length < placeRequests.length) {
-            console.log(allResults); // Log the results for debugging
-            return { places: allResults, error: 'Some place types could not be found and have been omitted.' }; // Partial results with error message
-        }
-    
-        // If everything is successful, return the results without error
-        return { places: allResults };
-    };
+export const getPlaces = async (
+    radius: number,
+    ratingMinimum: number,
+    reviewAmountMinimum: number,
+    placeTypes: Array<PlaceType>
+): Promise<{
+    places: Array<google.maps.places.PlaceResult>;
+    error?: string;
+}> => {
+    if (!latlng) {
+        throw new Error(
+            'Must wait for map to initialize before sending place requests.'
+        );
+    }
+    const center = new google.maps.LatLng(latlng[0], latlng[1]);
+
+    const placeRequests = createPlaceSearchRequests(center, radius, placeTypes);
+    if (!placeTypes.length) {
+        throw new Error('No Place Types Selected.');
+    }
+    const allResults: Array<google.maps.places.PlaceResult> = [];
+
+    for (const request of placeRequests) {
+        const result = await applyFiltersToRequest(
+            request,
+            ratingMinimum,
+            reviewAmountMinimum
+        );
+        // Add result if found for this type
+        if (result !== null) allResults.push(result);
+    }
+
+    // If no results are found across all types, return error information
+    if (allResults.length === 0) {
+        throw new Error('No Results Found. Try increasing Search Radius.');
+    }
+
+    // If some place types couldn't be found, return the results and provide a warning
+    if (allResults.length < placeRequests.length) {
+        console.log(allResults); // Log the results for debugging
+        return {
+            places: allResults,
+            error: 'Some place types could not be found and have been omitted.',
+        }; // Partial results with error message
+    }
+
+    // If everything is successful, return the results without error
+    return { places: allResults };
+};

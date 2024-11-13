@@ -46,7 +46,6 @@ function LocationFinder() {
     useEffect(() => {
         const initializeMapAndPosition = async () => {
             try {
-
                 let latlng: [number, number] = [
                     51.50737789462524, -0.12766368781412313,
                 ];
@@ -66,6 +65,13 @@ function LocationFinder() {
 
         initializeMapAndPosition();
     }, [useGeolocation]);
+
+    const handleScrollToBottom = () => {
+        window.scrollTo({
+            top: document.documentElement.scrollHeight,
+            behavior: 'smooth',
+        });
+    };
 
     function selectIconFromFirstType(type: string): string {
         switch (type) {
@@ -99,7 +105,7 @@ function LocationFinder() {
                 reviewAmountMinimum,
                 placeTypes
             );
-    
+
             // Process the places (add markers) even if there's an error message
             if (places.length > 0) {
                 addMarkers(
@@ -107,29 +113,33 @@ function LocationFinder() {
                         result.geometry?.location && result.types?.length
                             ? {
                                   latlng: result.geometry.location,
-                                  icon: selectIconFromFirstType(result.types[0]),
-                                  name: result.name ?? "Unknown Name", // Default name
-                                  address: result.vicinity ?? "Address not available", // Default address
+                                  icon: selectIconFromFirstType(
+                                      result.types[0]
+                                  ),
+                                  name: result.name ?? 'Unknown Name', // Default name
+                                  address:
+                                      result.vicinity ??
+                                      'Address not available', // Default address
                                   rating: result.rating ?? 0, // Default rating
-                                  reviewAmount: result.user_ratings_total ?? 0 // Default review count
+                                  reviewAmount: result.user_ratings_total ?? 0, // Default review count
                               }
                             : null
                     )
                 );
                 console.log(places); // Log places for debugging
             }
-    
+
             // Handle error case (if error exists)
             if (error) {
                 setError(error); // Set the error message to state
                 console.log(error); // Optionally log the error for debugging or user feedback
             }
-    
         } catch (error) {
             // Handle unexpected errors that occur during the API call
             if (error instanceof Error) setError(error.message);
         } finally {
             setLoading(false); // Set loading state to false after completion
+            handleScrollToBottom();
         }
     };
 
@@ -154,7 +164,7 @@ function LocationFinder() {
                     setUseLocationPopup={setUseLocationPopup}
                 />
             ) : null}
-            <div className="flex flex-col gap-2 mt-2 px-4">
+            <div className="flex flex-col gap-2 pt-2 px-4 min-h-[calc(100vh-4rem)]">
                 <Slider
                     value={radius}
                     min={100}

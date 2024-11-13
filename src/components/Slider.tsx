@@ -29,6 +29,7 @@ const Slider: React.FC<SliderProps> = ({
                 max={max}
                 step={step}
                 value={value}
+                aria-label="Search Radius"
                 onChange={(e) => onChange(Number(e.target.value))}
                 className="slider w-44"
             />
