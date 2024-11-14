@@ -168,7 +168,7 @@ function LocationFinder() {
                 <Slider
                     value={radius}
                     min={100}
-                    max={5000}
+                    max={10000}
                     step={50}
                     onChange={setRadius}
                     label="Search Radius"
@@ -278,23 +278,13 @@ function LocationFinder() {
 
                 <button
                     onClick={handleSearch}
-                    className="py-2 pl-2 mb-2 w-fit flex items-center bg-transparent hover:bg-orange-400 border border-orange-400  text-orange-400 hover:text-stone-950 rounded-sm transition-all"
+                    className="py-2 px-2 mb-2 w-fit flex gap-2 items-center bg-orange-400 hover:bg-orange-300 text-stone-950 rounded-sm transition-all"
                 >
                     Search Places
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="size-5 inline-block"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m8.25 4.5 7.5 7.5-7.5 7.5"
-                        />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+</svg>
+
                 </button>
             </div>
             <div
