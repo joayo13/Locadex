@@ -29,6 +29,7 @@ function LocationFinder() {
     const [placeTypes, setPlaceTypes] = useState<Array<PlaceType>>([]); // Default place type
     const [useGeolocation, setUseGeolocation] = useState(false);
     const [useLocationPopup, setUseLocationPopup] = useState(false);
+    const [isMobile, setIsMobile]= useState(false)
     const { setError } = useError();
     const setErrorRef = useRef(setError);
     useEffect(() => {
@@ -65,10 +66,32 @@ function LocationFinder() {
 
         initializeMapAndPosition();
     }, [useGeolocation]);
-
+    useEffect(() => {
+        const checkIfMobile = () => {
+          const userAgent = navigator.userAgent.toLowerCase();
+          setIsMobile(
+            /iphone|ipod|ipad|android|blackberry|iemobile|opera mini/.test(userAgent)
+          );
+        };
+    
+        checkIfMobile(); // Check on mount
+    
+        // Optionally, update on resize or other events
+        window.addEventListener("resize", checkIfMobile);
+    
+        return () => {
+          window.removeEventListener("resize", checkIfMobile);
+        };
+      }, []);
     const handleScrollToBottom = () => {
         window.scrollTo({
             top: document.documentElement.scrollHeight,
+            behavior: 'smooth',
+        });
+    };
+    const handleScrollToTop = () => {
+        window.scrollTo({
+            top: 0,
             behavior: 'smooth',
         });
     };
@@ -126,7 +149,7 @@ function LocationFinder() {
                             : null
                     )
                 );
-                console.log(places); // Log places for debugging
+                handleScrollToBottom();
             }
 
             // Handle error case (if error exists)
@@ -139,7 +162,7 @@ function LocationFinder() {
             if (error instanceof Error) setError(error.message);
         } finally {
             setLoading(false); // Set loading state to false after completion
-            handleScrollToBottom();
+            
         }
     };
 
@@ -157,7 +180,7 @@ function LocationFinder() {
     };
 
     return (
-        <div className="bg-stone-950 text-stone-200 flex flex-col lg:flex-row">
+        <div className="bg-stone-950 text-stone-200 flex flex-col lg:flex-row relative">
             {useLocationPopup ? (
                 <UseLocationPopup
                     setUseGeolocation={setUseGeolocation}
@@ -298,6 +321,20 @@ function LocationFinder() {
                     </div>
                 ) : null}
             </div>
+            {isMobile ? (
+        <button
+          className="
+            absolute flex gap-2 bottom-0 left-0 
+            py-2 px-2 bg-orange-400 text-stone-950 z-50 rounded-sm"
+          onClick={() => handleScrollToTop()}
+        >
+          New Search
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+</svg>
+
+        </button>
+      ) : null}
         </div>
     );
 }

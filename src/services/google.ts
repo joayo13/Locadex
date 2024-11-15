@@ -13,7 +13,7 @@ export const initMap = async (latlngcoords: [number, number]) => {
         const center = { lat: latlng[0], lng: latlng[1] };
         map = new Map(document.getElementById('map') as HTMLElement, {
             center: center,
-            zoom: 13,
+            zoom: 12,
             mapId: '7c4573adc746c106',
         });
     } catch (error) {
