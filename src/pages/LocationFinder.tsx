@@ -29,7 +29,7 @@ function LocationFinder() {
     const [placeTypes, setPlaceTypes] = useState<Array<PlaceType>>([]); // Default place type
     const [useGeolocation, setUseGeolocation] = useState(false);
     const [useLocationPopup, setUseLocationPopup] = useState(false);
-    const [isMobile, setIsMobile]= useState(false)
+    const [isMobile, setIsMobile] = useState(false);
     const { setError } = useError();
     const setErrorRef = useRef(setError);
     useEffect(() => {
@@ -68,21 +68,23 @@ function LocationFinder() {
     }, [useGeolocation]);
     useEffect(() => {
         const checkIfMobile = () => {
-          const userAgent = navigator.userAgent.toLowerCase();
-          setIsMobile(
-            /iphone|ipod|ipad|android|blackberry|iemobile|opera mini/.test(userAgent)
-          );
+            const userAgent = navigator.userAgent.toLowerCase();
+            setIsMobile(
+                /iphone|ipod|ipad|android|blackberry|iemobile|opera mini/.test(
+                    userAgent
+                )
+            );
         };
-    
+
         checkIfMobile(); // Check on mount
-    
+
         // Optionally, update on resize or other events
-        window.addEventListener("resize", checkIfMobile);
-    
+        window.addEventListener('resize', checkIfMobile);
+
         return () => {
-          window.removeEventListener("resize", checkIfMobile);
+            window.removeEventListener('resize', checkIfMobile);
         };
-      }, []);
+    }, []);
     const handleScrollToBottom = () => {
         window.scrollTo({
             top: document.documentElement.scrollHeight,
@@ -162,7 +164,6 @@ function LocationFinder() {
             if (error instanceof Error) setError(error.message);
         } finally {
             setLoading(false); // Set loading state to false after completion
-            
         }
     };
 
@@ -304,10 +305,20 @@ function LocationFinder() {
                     className="py-2 px-2 mb-2 w-fit flex gap-2 items-center bg-orange-400 hover:bg-orange-300 text-stone-950 rounded-sm transition-all"
                 >
                     Search Places
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-</svg>
-
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="size-6"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                        />
+                    </svg>
                 </button>
             </div>
             <div
@@ -322,19 +333,29 @@ function LocationFinder() {
                 ) : null}
             </div>
             {isMobile ? (
-        <button
-          className="
+                <button
+                    className="
             absolute flex gap-2 bottom-0 left-0 
             py-2 px-2 bg-orange-400 text-stone-950 z-50 rounded-sm"
-          onClick={() => handleScrollToTop()}
-        >
-          New Search
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
-</svg>
-
-        </button>
-      ) : null}
+                    onClick={() => handleScrollToTop()}
+                >
+                    New Search
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="size-6"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                        />
+                    </svg>
+                </button>
+            ) : null}
         </div>
     );
 }
