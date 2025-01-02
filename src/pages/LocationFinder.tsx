@@ -24,8 +24,6 @@ type PlaceType =
 function LocationFinder() {
     const [loading, setLoading] = useState(false);
     const [radius, setRadius] = useState(1000); // Default radius in meters
-    const [ratingMinimum, setRatingMinimum] = useState(3); // Default rating
-    const [reviewAmountMinimum, setReviewAmountMinimum] = useState(10); // Default review count
     const [placeTypes, setPlaceTypes] = useState<Array<PlaceType>>([]); // Default place type
     const [useGeolocation, setUseGeolocation] = useState(false);
     const [useLocationPopup, setUseLocationPopup] = useState(false);
@@ -126,8 +124,6 @@ function LocationFinder() {
         try {
             const { places, error } = await getPlaces(
                 radius,
-                ratingMinimum,
-                reviewAmountMinimum,
                 placeTypes
             );
 
@@ -197,34 +193,6 @@ function LocationFinder() {
                     onChange={setRadius}
                     label="Search Radius"
                 />
-
-                <label>
-                    Set Minimum Rating:
-                    <input
-                        type="number"
-                        min="0"
-                        max="5"
-                        step="0.1"
-                        value={ratingMinimum}
-                        onChange={(e) =>
-                            setRatingMinimum(Number(e.target.value))
-                        }
-                        className="block p-1 mt-2 text-black"
-                    />
-                </label>
-
-                <label>
-                    Set Minimum Review Count:
-                    <input
-                        type="number"
-                        min="0"
-                        value={reviewAmountMinimum}
-                        onChange={(e) =>
-                            setReviewAmountMinimum(Number(e.target.value))
-                        }
-                        className="p-1 mt-2 block text-black"
-                    />
-                </label>
 
                 <div className="flex flex-col items-start">
                     <h3>Select Place Types:</h3>

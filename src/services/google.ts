@@ -170,53 +170,60 @@ type PlaceType =
     | 'gym'
     | 'library';
 
-async function applyFiltersToRequest(
-    request: google.maps.places.PlaceSearchRequest,
-    ratingMinimum: number,
-    reviewAmountMinimum: number
-): Promise<google.maps.places.PlaceResult | null> {
-    const service = new google.maps.places.PlacesService(
-        map as google.maps.Map
-    );
-    const result = await new Promise<google.maps.places.PlaceResult | null>(
-        (resolve) => {
-            service.nearbySearch(request, (results, status) => {
-                if (
-                    status === google.maps.places.PlacesServiceStatus.OK &&
-                    results
-                ) {
-                    const filteredResults = results.filter((place) => {
-                        const firstType =
-                            place.types && place.types.length > 0
-                                ? place.types[0]
-                                : null;
-                        return (
-                            (place.rating ?? 0) >= ratingMinimum &&
-                            (place.user_ratings_total ?? 0) >=
-                                reviewAmountMinimum &&
-                            firstType === request.type
-                        );
-                    });
-
-                    if (filteredResults.length > 0) {
-                        resolve(
-                            filteredResults[
-                                Math.floor(
-                                    Math.random() * filteredResults.length
-                                )
-                            ]
-                        );
+    async function applyFiltersToRequest(
+        request: google.maps.places.PlaceSearchRequest
+    ): Promise<google.maps.places.PlaceResult | null> {
+        const service = new google.maps.places.PlacesService(
+            map as google.maps.Map
+        );
+    
+        const result = await new Promise<google.maps.places.PlaceResult | null>(
+            (resolve) => {
+                service.nearbySearch(request, (results, status) => {
+                    if (
+                        status === google.maps.places.PlacesServiceStatus.OK &&
+                        results
+                    ) {
+                        if (results.length > 0) {
+                            // Dynamically calculate the mean rating from results
+                            const totalRating = results.reduce((sum, place) => {
+                                return sum + (place.rating ?? 0);
+                            }, 0);
+                            const meanRating = totalRating / results.length;
+    
+                            const minimumReviewThreshold = 50; // Example threshold
+    
+                            const scoredResults = results.map((place) => {
+                                const rating = place.rating ?? 0;
+                                const reviewCount = place.user_ratings_total ?? 0;
+    
+                                // Bayesian Weighted Rating Formula
+                                const score =
+                                    (rating * reviewCount +
+                                        meanRating * minimumReviewThreshold) /
+                                    (reviewCount + minimumReviewThreshold);
+    
+                                return { place, score };
+                            });
+    
+                            // Find the place with the highest score
+                            const bestPlace = scoredResults.reduce((best, current) => {
+                                return current.score > best.score ? current : best;
+                            }, scoredResults[0]);
+    
+                            resolve(bestPlace.place);
+                        } else {
+                            resolve(null); // No places meeting criteria
+                        }
                     } else {
-                        resolve(null); // No places meeting criteria
+                        resolve(null); // No places found
                     }
-                } else {
-                    resolve(null); // No places found
-                }
-            });
-        }
-    );
-    return result;
-}
+                });
+            }
+        );
+    
+        return result;
+    }
 const createPlaceSearchRequests = (
     center: google.maps.LatLng,
     radius: number,
@@ -232,8 +239,6 @@ const createPlaceSearchRequests = (
 
 export const getPlaces = async (
     radius: number,
-    ratingMinimum: number,
-    reviewAmountMinimum: number,
     placeTypes: Array<PlaceType>
 ): Promise<{
     places: Array<google.maps.places.PlaceResult>;
@@ -255,8 +260,6 @@ export const getPlaces = async (
     for (const request of placeRequests) {
         const result = await applyFiltersToRequest(
             request,
-            ratingMinimum,
-            reviewAmountMinimum
         );
         // Add result if found for this type
         if (result !== null) allResults.push(result);
