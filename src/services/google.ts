@@ -191,7 +191,7 @@ type PlaceType =
                             }, 0);
                             const meanRating = totalRating / results.length;
     
-                            const minimumReviewThreshold = 50; // Example threshold
+                            const minimumReviewThreshold = 100;
     
                             const scoredResults = results.map((place) => {
                                 const rating = place.rating ?? 0;
