@@ -23,7 +23,7 @@ type PlaceType =
 
 function LocationFinder() {
     const [loading, setLoading] = useState(false);
-    const [radius, setRadius] = useState(100); // Default radius in meters
+    const [radius, setRadius] = useState(250); // Default radius in meters
     const [placeTypes, setPlaceTypes] = useState<Array<PlaceType>>([]); // Default place type
     const [useGeolocation, setUseGeolocation] = useState(false);
     const [useLocationPopup, setUseLocationPopup] = useState(false);
@@ -187,9 +187,9 @@ function LocationFinder() {
             <div className="flex flex-col gap-2 pt-2 px-4 min-h-[calc(100vh-4rem)]">
                 <Slider
                     value={radius}
-                    min={100}
-                    max={20000}
-                    step={100}
+                    min={250}
+                    max={10000}
+                    step={250}
                     onChange={setRadius}
                     label="Search Radius"
                 />

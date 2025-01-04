@@ -185,15 +185,17 @@ type PlaceType =
                         results
                     ) {
                         if (results.length > 0) {
-                            // Dynamically calculate the mean rating from results
-                            const totalRating = results.reduce((sum, place) => {
+                            const filteredResults = results.filter((place) => {
+                                return place.types?.[0] === request.type;
+                            });
+                            const totalRating = filteredResults.reduce((sum, place) => {
                                 return sum + (place.rating ?? 0);
                             }, 0);
-                            const meanRating = totalRating / results.length;
+                            const meanRating = totalRating / filteredResults.length;
     
-                            const minimumReviewThreshold = 100;
+                            const minimumReviewThreshold = 500;
     
-                            const scoredResults = results.map((place) => {
+                            const scoredResults = filteredResults.map((place) => {
                                 const rating = place.rating ?? 0;
                                 const reviewCount = place.user_ratings_total ?? 0;
     
