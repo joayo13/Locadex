@@ -185,17 +185,15 @@ type PlaceType =
                         results
                     ) {
                         if (results.length > 0) {
-                            const filteredResults = results.filter((place) => {
-                                return place.types?.[0] === request.type;
-                            });
-                            const totalRating = filteredResults.reduce((sum, place) => {
+                    
+                            const totalRating = results.reduce((sum, place) => {
                                 return sum + (place.rating ?? 0);
                             }, 0);
-                            const meanRating = totalRating / filteredResults.length;
+                            const meanRating = totalRating / results.length;
     
                             const minimumReviewThreshold = 500;
     
-                            const scoredResults = filteredResults.map((place) => {
+                            const scoredResults = results.map((place) => {
                                 const rating = place.rating ?? 0;
                                 const reviewCount = place.user_ratings_total ?? 0;
     
@@ -204,8 +202,16 @@ type PlaceType =
                                     (rating * reviewCount +
                                         meanRating * minimumReviewThreshold) /
                                     (reviewCount + minimumReviewThreshold);
-    
+                                    console.log({
+                                        placeName: place.name,
+                                        rating,
+                                        reviewCount,
+                                        meanRating,
+                                        minimumReviewThreshold,
+                                        score,
+                                    });
                                 return { place, score };
+                                
                             });
     
                             // Find the place with the highest score
